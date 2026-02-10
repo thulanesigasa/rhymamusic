@@ -411,6 +411,22 @@ footer {
     justify-content: center;
 }
 
+.release-card {
+    display: flex;
+    gap: 2rem;
+    align-items: center;
+    justify-content: center;
+}
+
+.cover-art {
+    max-width: 150px;
+    width: 100%;
+    aspect-ratio: 3 / 4;
+    object-fit: cover;
+    border-radius: 8px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+}
+
 /* Hype Section */
 .hype-section {
     background-color: var(--text-color);
