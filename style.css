@@ -198,3 +198,13 @@ h1, .section-title { font-family: 'Syncopate', sans-serif; letter-spacing: 4px; 
     cursor: pointer;
     font-weight: bold;
 }
+
+.cart-item button {
+    transition: transform 0.2s ease;
+    padding: 5px;
+}
+
+.cart-item button:hover {
+    transform: scale(1.2);
+    color: #ff4d4d !important; /* Slightly brighter red on hover */
+}
