@@ -3,54 +3,23 @@
 {% block title %}Merch{% endblock %}
 
 {% block content %}
-<section class="container" style="padding: 4rem 2rem;">
-    <h1 style="text-align: center; margin-bottom: 3rem;">Official Merchandise</h1>
+<section class="container"
+    style="padding: 6rem 2rem; text-align: center; min-height: 60vh; display: flex; flex-direction: column; justify-content: center; align-items: center;">
+    <h1 style="margin-bottom: 2rem;">Merchandise</h1>
+    <div class="coming-soon-container" style="max-width: 600px;">
+        <h2 style="font-size: 3rem; color: var(--accent-color); margin-bottom: 1.5rem;">Coming Soon</h2>
+        <p style="font-size: 1.2rem; margin-bottom: 2rem; opacity: 0.8;">
+            Exclusive <strong>Rhyma</strong> apparel and accessories are currently in production.
+            Prices will be listed in ZAR (Rands).
+        </p>
 
-    <div class="merch-grid">
-
-        {% for product in products %}
-    <div class="product-card">
-        <div class="product-img" style="background-image: url('{{ product.image_url }}');">
-            <button class="add-to-cart" onclick="addToCart('{{ product.name }}', '{{ product.price }}')">
-                Add to Cart
-            </button>
-        </div>
-        <h3>{{ product.name }}</h3>
-        <p class="price">${{ product.price }}</p>
-    </div>
-    {% endfor %}
-
-
-        <!-- ITEM 1 -->
-        <div class="merch-item">
-            <div class="merch-img-placeholder"></div>
-            <h3>Signature Hoodie</h3>
-            <p class="price">$65.00</p>
-            <button class="buy-btn">Add to Cart</button>
-        </div>
-
-        <!-- ITEM 2 -->
-        <div class="merch-item">
-            <div class="merch-img-placeholder"></div>
-            <h3>Tour Tee (Black)</h3>
-            <p class="price">$35.00</p>
-            <button class="buy-btn">Add to Cart</button>
-        </div>
-
-        <!-- ITEM 3 -->
-        <div class="merch-item">
-            <div class="merch-img-placeholder"></div>
-            <h3>Vinyl Collection</h3>
-            <p class="price">$45.00</p>
-            <button class="buy-btn">Add to Cart</button>
-        </div>
-
-        <!-- ITEM 4 -->
-        <div class="merch-item">
-            <div class="merch-img-placeholder"></div>
-            <h3>Dad Hat</h3>
-            <p class="price">$30.00</p>
-            <button class="buy-btn">Add to Cart</button>
+        <div style="background-color: var(--secondary-bg); padding: 2rem; border: 1px solid var(--border-color);">
+            <p style="margin-bottom: 1rem; font-size: 0.9rem; text-transform: uppercase; letter-spacing: 1px;">Get
+                Notified When The Drop Goes Live</p>
+            <form style="display: flex; gap: 1rem; flex-wrap: wrap; justify-content: center;">
+                <input type="email" placeholder="Enter your email" style="flex: 1; min-width: 250px; margin-bottom: 0;">
+                <button type="submit" class="buy-btn" style="white-space: nowrap;">Notify Me</button>
+            </form>
         </div>
     </div>
 </section>
