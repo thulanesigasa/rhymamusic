@@ -2,11 +2,81 @@
     --bg-color: #FFFFFF;
     --text-color: #0E0E0E;
     --accent-color: #C5A059;
+    --secondary-bg: #f9f9f9;
+    --border-color: rgba(0, 0, 0, 0.05);
     --font-heading: 'Playfair Display', serif;
     --font-body: 'Lato', sans-serif;
     --spacing-unit: 1rem;
     --header-height: 80px;
 }
+
+[data-theme="dark"] {
+    --bg-color: #0E0E0E;
+    --text-color: #FFFFFF;
+    --accent-color: #C5A059;
+    --secondary-bg: #1a1a1a;
+    --border-color: rgba(255, 255, 255, 0.1);
+}
+
+/* Custom Theme Toggle (Uiverse.io) */
+.theme-switch-wrapper {
+    --toggle-size: 30px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: relative;
+    cursor: pointer;
+    font-size: var(--toggle-size);
+    user-select: none;
+    fill: var(--text-color);
+    /* Maintained Color */
+    margin-left: 2rem;
+}
+
+.theme-switch-wrapper .moon {
+    position: absolute;
+    animation: keyframes-fill .5s;
+    display: none;
+    /* Default Hidden (Light Mode) */
+}
+
+.theme-switch-wrapper .sun {
+    position: absolute;
+    animation: keyframes-fill .5s;
+    display: block;
+    /* Default Visible (Light Mode) */
+}
+
+/* On Checked (Dark Mode Active) */
+.theme-switch-wrapper input:checked~.moon {
+    display: block;
+}
+
+.theme-switch-wrapper input:checked~.sun {
+    display: none;
+}
+
+/* Hide default checkbox */
+.theme-switch-wrapper input {
+    position: absolute;
+    opacity: 0;
+    cursor: pointer;
+    height: 0;
+    width: 0;
+}
+
+/* Animation */
+@keyframes keyframes-fill {
+    0% {
+        transform: rotate(-360deg) scale(0);
+        opacity: 0;
+    }
+
+    75% {
+        transform: rotate(25deg);
+    }
+}
+
 
 * {
     box-sizing: border-box;
@@ -44,11 +114,13 @@ ul {
     list-style: none;
 }
 
+
 /* Navbar */
 .navbar {
     position: sticky;
     top: 0;
-    background-color: rgba(255, 255, 255, 0.95);
+    background-color: var(--bg-color);
+    /* Updated to use var */
     backdrop-filter: blur(10px);
     height: var(--header-height);
     display: flex;
@@ -56,8 +128,52 @@ ul {
     align-items: center;
     padding: 0 5%;
     z-index: 1000;
-    border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+    border-bottom: 1px solid var(--border-color);
+    /* Updated */
 }
+
+/* ... (skipping some unchanged lines) ... */
+
+/* Footer */
+footer {
+    background-color: var(--secondary-bg);
+    /* Updated */
+    padding: 3rem 0;
+    text-align: center;
+    margin-top: 4rem;
+    border-top: 1px solid var(--border-color);
+    /* Updated */
+}
+
+/* ... */
+
+/* Form Styles */
+input,
+textarea,
+select {
+    width: 100%;
+    padding: 1rem;
+    margin-bottom: 1.5rem;
+    border: 1px solid var(--border-color);
+    /* Updated */
+    background-color: var(--secondary-bg);
+    /* Updated */
+    color: var(--text-color);
+    /* Ensure text is visible in dark mode */
+    font-family: var(--font-body);
+}
+
+/* ... */
+
+.copyright {
+    width: 100%;
+    text-align: center;
+    margin-top: 2rem;
+    padding-top: 2rem;
+    border-top: 1px solid var(--border-color);
+    /* Updated */
+}
+
 
 .logo {
     font-family: var(--font-heading);
@@ -113,11 +229,11 @@ main {
 
 /* Footer */
 footer {
-    background-color: #f9f9f9;
+    background-color: var(--secondary-bg);
     padding: 3rem 0;
     text-align: center;
     margin-top: 4rem;
-    border-top: 1px solid rgba(0, 0, 0, 0.05);
+    border-top: 1px solid var(--border-color);
 }
 
 .social-icons {
@@ -157,7 +273,7 @@ footer {
         flex-direction: column;
         align-items: center;
         padding: 2rem 0;
-        border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+        border-bottom: 1px solid var(--border-color);
     }
 
     .nav-links.active {
@@ -247,12 +363,12 @@ footer {
     justify-content: space-between;
     align-items: center;
     padding: 1rem;
-    border-bottom: 1px solid #eee;
+    border-bottom: 1px solid var(--border-color);
     transition: background 0.3s;
 }
 
 .track-item:hover {
-    background-color: #fcfcfc;
+    background-color: var(--secondary-bg);
 }
 
 .play-btn {
@@ -267,14 +383,14 @@ footer {
     display: flex;
     max-width: 900px;
     margin: 0 auto;
-    background-color: #fff;
+    background-color: var(--bg-color);
     box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
-    border: 1px solid #f0f0f0;
+    border: 1px solid var(--border-color);
 }
 
 .highlight-art {
     width: 40%;
-    background-color: #ddd;
+    background-color: var(--secondary-bg);
     /* Placeholder */
     min-height: 300px;
 }
@@ -289,9 +405,9 @@ footer {
 
 /* Hype Section */
 .hype-section {
-    background-color: #0E0E0E;
-    /* Dark section for contrast */
-    color: #fff;
+    background-color: var(--text-color);
+    /* Inverted contrast */
+    color: var(--bg-color);
     padding: 4rem 2rem;
     text-align: center;
 }
@@ -325,6 +441,9 @@ footer {
     padding: 1rem;
     border: none;
     min-width: 250px;
+    background-color: var(--bg-color);
+    /* Input specific override for contrast in hype section */
+    color: var(--text-color);
 }
 
 .presave-form button {
@@ -344,8 +463,9 @@ select {
     width: 100%;
     padding: 1rem;
     margin-bottom: 1.5rem;
-    border: 1px solid #ddd;
-    background-color: #f9f9f9;
+    border: 1px solid var(--border-color);
+    background-color: var(--secondary-bg);
+    color: var(--text-color);
     font-family: var(--font-body);
 }
 
@@ -395,7 +515,7 @@ button[type="submit"] {
 .merch-img-placeholder {
     width: 100%;
     aspect-ratio: 1/1;
-    background-color: #f0f0f0;
+    background-color: var(--secondary-bg);
     margin-bottom: 1.5rem;
 }
 
@@ -504,5 +624,5 @@ footer .container {
     text-align: center;
     margin-top: 2rem;
     padding-top: 2rem;
-    border-top: 1px solid rgba(0, 0, 0, 0.05);
+    border-top: 1px solid var(--border-color);
 }
