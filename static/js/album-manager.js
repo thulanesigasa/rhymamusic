@@ -4,6 +4,8 @@ let albums = [
 ];
 
 let currentAlbumIndex = 0;
+let selectedFiles = [];
+let selectedFilesForChange = [];
 
 document.addEventListener('DOMContentLoaded', function() {
     // Menu button
@@ -20,6 +22,7 @@ document.addEventListener('DOMContentLoaded', function() {
     
     // Event listeners
     menuBtn.addEventListener('click', () => {
+        updateAlbumSelect();
         menuModal.classList.add('show');
     });
     
@@ -43,8 +46,15 @@ document.addEventListener('DOMContentLoaded', function() {
             menuModal.classList.remove('show');
             
             if (action === 'add') {
+                selectedFiles = [];
+                document.getElementById('new-album-input').value = '';
+                document.getElementById('add-image-input').value = '';
+                document.getElementById('add-selected-images').innerHTML = '';
                 addModal.classList.add('show');
             } else if (action === 'change') {
+                selectedFilesForChange = [];
+                document.getElementById('change-image-input').value = '';
+                document.getElementById('change-selected-images').innerHTML = '';
                 changeModal.classList.add('show');
             } else if (action === 'remove') {
                 removeAlbum();
@@ -55,15 +65,21 @@ document.addEventListener('DOMContentLoaded', function() {
     // Add album
     const confirmAddBtn = document.getElementById('confirm-add-btn');
     const newAlbumInput = document.getElementById('new-album-input');
+    const addImageInput = document.getElementById('add-image-input');
+    
+    addImageInput.addEventListener('change', (e) => {
+        selectedFiles = Array.from(e.target.files);
+        updateAddImagePreview();
+    });
     
     confirmAddBtn.addEventListener('click', () => {
         const title = newAlbumInput.value.trim();
         if (title) {
-            albums.push({ title: title, images: [] });
+            const imageNames = selectedFiles.map(file => file.name);
+            albums.push({ title: title, images: imageNames });
             currentAlbumIndex = albums.length - 1;
             updateDisplay();
             addModal.classList.remove('show');
-            newAlbumInput.value = '';
             alert(`Album "${title}" added successfully!`);
         } else {
             alert('Please enter an album title');
@@ -73,12 +89,21 @@ document.addEventListener('DOMContentLoaded', function() {
     // Change album
     const confirmChangeBtn = document.getElementById('confirm-change-btn');
     const albumSelect = document.getElementById('album-select');
+    const changeImageInput = document.getElementById('change-image-input');
+    
+    changeImageInput.addEventListener('change', (e) => {
+        selectedFilesForChange = Array.from(e.target.files);
+        updateChangeImagePreview();
+    });
     
     confirmChangeBtn.addEventListener('click', () => {
         const selectedTitle = albumSelect.value;
         if (selectedTitle) {
             const index = albums.findIndex(a => a.title === selectedTitle);
             if (index !== -1) {
+                if (selectedFilesForChange.length > 0) {
+                    albums[index].images = selectedFilesForChange.map(file => file.name);
+                }
                 currentAlbumIndex = index;
                 updateDisplay();
                 changeModal.classList.remove('show');
@@ -89,6 +114,70 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     });
 });
+
+function updateAlbumSelect() {
+    const select = document.getElementById('album-select');
+    // Clear existing options except the first one
+    while (select.options.length > 1) {
+        select.remove(1);
+    }
+    
+    // Add albums to select
+    albums.forEach(album => {
+        const option = document.createElement('option');
+        option.value = album.title;
+        option.textContent = album.title;
+        select.appendChild(option);
+    });
+}
+
+function updateAddImagePreview() {
+    const previewContainer = document.getElementById('add-selected-images');
+    previewContainer.innerHTML = '';
+    
+    selectedFiles.forEach((file, index) => {
+        const reader = new FileReader();
+        reader.onload = (e) => {
+            const div = document.createElement('div');
+            div.className = 'image-preview-item';
+            div.innerHTML = `
+                <img src="${e.target.result}" alt="Preview">
+                <button type="button" class="remove-preview" data-index="${index}">✕</button>
+            `;
+            previewContainer.appendChild(div);
+            
+            div.querySelector('.remove-preview').addEventListener('click', () => {
+                selectedFiles.splice(index, 1);
+                updateAddImagePreview();
+            });
+        };
+        reader.readAsDataURL(file);
+    });
+}
+
+function updateChangeImagePreview() {
+    const previewContainer = document.getElementById('change-selected-images');
+    previewContainer.innerHTML = '';
+    
+    selectedFilesForChange.forEach((file, index) => {
+        const reader = new FileReader();
+        reader.onload = (e) => {
+            const div = document.createElement('div');
+            div.className = 'image-preview-item';
+            div.innerHTML = `
+                <img src="${e.target.result}" alt="Preview">
+                <button type="button" class="remove-preview" data-index="${index}">✕</button>
+            `;
+            previewContainer.appendChild(div);
+            
+            div.querySelector('.remove-preview').addEventListener('click', () => {
+                selectedFilesForChange.splice(index, 1);
+                updateChangeImagePreview();
+            });
+        };
+        reader.readAsDataURL(file);
+    });
+}
 
 function removeAlbum() {
     if (albums.length <= 1) {

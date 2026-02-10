@@ -11,13 +11,13 @@
 
 <section class="featured-preview">
     <div class="container">
-        <div class="latest-release-header">
-            <h2>Latest Release</h2>
-            <button id="album-menu-btn" class="album-menu-btn">⚙️</button>
-        </div>
+        <h2>Latest Release</h2>
         
         <div class="album-section">
-            <h3 id="album-title">Album Title</h3>
+            <div class="album-title-header">
+                <h3 id="album-title">Album Title</h3>
+                <button id="album-menu-btn" class="album-menu-btn">⚙️</button>
+            </div>
             <div class="album-images-container">
                 <img src="{{ url_for('static', filename='images/DSC00971.jpg.jpeg') }}" alt="Album Cover 1" class="album-image">
                 <img src="{{ url_for('static', filename='images/IMG_8984.JPG.jpeg') }}" alt="Album Cover 2" class="album-image">
@@ -52,10 +52,12 @@
             <p>Select the album title you want to change it to:</p>
             <select id="album-select">
                 <option value="">-- Select Album --</option>
-                <option value="New Album 1">New Album 1</option>
-                <option value="New Album 2">New Album 2</option>
-                <option value="New Album 3">New Album 3</option>
             </select>
+            <div class="modal-section">
+                <label for="change-image-input">Select Image:</label>
+                <input type="file" id="change-image-input" accept="image/*" multiple>
+                <div id="change-selected-images" class="selected-images-preview"></div>
+            </div>
             <button id="confirm-change-btn" class="modal-btn">Confirm</button>
         </div>
     </div>
@@ -66,6 +68,11 @@
             <span class="close">&times;</span>
             <h3>Add New Album Title</h3>
             <input type="text" id="new-album-input" placeholder="Enter new album title">
+            <div class="modal-section">
+                <label for="add-image-input">Select Images:</label>
+                <input type="file" id="add-image-input" accept="image/*" multiple>
+                <div id="add-selected-images" class="selected-images-preview"></div>
+            </div>
             <button id="confirm-add-btn" class="modal-btn">Add Album</button>
         </div>
     </div>
