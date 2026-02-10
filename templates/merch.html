@@ -7,6 +7,20 @@
     <h1 style="text-align: center; margin-bottom: 3rem;">Official Merchandise</h1>
 
     <div class="merch-grid">
+
+        {% for product in products %}
+    <div class="product-card">
+        <div class="product-img" style="background-image: url('{{ product.image_url }}');">
+            <button class="add-to-cart" onclick="addToCart('{{ product.name }}', '{{ product.price }}')">
+                Add to Cart
+            </button>
+        </div>
+        <h3>{{ product.name }}</h3>
+        <p class="price">${{ product.price }}</p>
+    </div>
+    {% endfor %}
+
+
         <!-- ITEM 1 -->
         <div class="merch-item">
             <div class="merch-img-placeholder"></div>
@@ -40,4 +54,6 @@
         </div>
     </div>
 </section>
+
+
 {% endblock %}

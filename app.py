@@ -1,7 +1,39 @@
 from flask import Flask, render_template, request
 from datetime import datetime
+from flask import Flask, render_template, request, redirect, url_for
+from flask_sqlalchemy import SQLAlchemy
+from flask_login import LoginManager, UserMixin, login_user, login_required
 
 app = Flask(__name__)
+
+app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///site.db'
+app.config['SECRET_KEY'] = 'your_secret_bronze_key'
+db = SQLAlchemy(app)
+
+# Database Model for Merch
+class Product(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(100), nullable=False)
+    price = db.Column(db.Float, nullable=False)
+    image_url = db.Column(db.String(200))
+
+# Run this once in python console to create: db.create_all()
+
+@app.route('/admin', methods=['GET', 'POST'])
+# @login_required  <-- Add this once you set up a login page
+def admin():
+    if request.method == 'POST':
+        # Get data from the form
+        new_name = request.form.get('name')
+        new_price = request.form.get('price')
+        
+        # Save to database
+        new_product = Product(name=new_name, price=new_price)
+        db.session.add(new_product)
+        db.session.commit()
+        return redirect(url_for('merch'))
+        
+    return render_template('admin.html')
 
 @app.context_processor
 def inject_now():
