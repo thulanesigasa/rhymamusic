@@ -11,15 +11,66 @@
 
 <section class="featured-preview">
     <div class="container">
-        <h2>Latest Release</h2>
-        <div class="release-card">
-            <img src="{{ url_for('static', filename='images/DSC00971.jpg.jpeg') }}" alt="Album Cover" class="cover-art">
-            <div class="release-info">
-                <h3>Album Title</h3>
-                <p>Out Now on All Platforms</p>
-                <a href="#" class="text-link">Stream It &rarr;</a>
+        <div class="latest-release-header">
+            <h2>Latest Release</h2>
+            <button id="album-menu-btn" class="album-menu-btn">⚙️</button>
+        </div>
+        
+        <div class="album-section">
+            <h3 id="album-title">Album Title</h3>
+            <div class="album-images-container">
+                <img src="{{ url_for('static', filename='images/DSC00971.jpg.jpeg') }}" alt="Album Cover 1" class="album-image">
+                <img src="{{ url_for('static', filename='images/IMG_8984.JPG.jpeg') }}" alt="Album Cover 2" class="album-image">
+                <img src="{{ url_for('static', filename='images/STAMINA.jpg.jpeg') }}" alt="Album Cover 3" class="album-image">
+            </div>
+        </div>
+
+        <div class="release-info">
+            <p>Out Now on All Platforms</p>
+            <a href="#" class="text-link">Stream It &rarr;</a>
+        </div>
+    </div>
+
+    <!-- Modal for album management -->
+    <div id="album-modal" class="album-modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <h3>Album Management</h3>
+            <div class="modal-options">
+                <button class="modal-btn" data-action="add">1. Add new album title</button>
+                <button class="modal-btn" data-action="change">2. Change album title</button>
+                <button class="modal-btn" data-action="remove">3. Remove album title</button>
             </div>
         </div>
     </div>
+
+    <!-- Change album title modal -->
+    <div id="change-album-modal" class="album-modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <h3>Change Album Title</h3>
+            <p>Select the album title you want to change it to:</p>
+            <select id="album-select">
+                <option value="">-- Select Album --</option>
+                <option value="New Album 1">New Album 1</option>
+                <option value="New Album 2">New Album 2</option>
+                <option value="New Album 3">New Album 3</option>
+            </select>
+            <button id="confirm-change-btn" class="modal-btn">Confirm</button>
+        </div>
+    </div>
+
+    <!-- Add new album title modal -->
+    <div id="add-album-modal" class="album-modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <h3>Add New Album Title</h3>
+            <input type="text" id="new-album-input" placeholder="Enter new album title">
+            <button id="confirm-add-btn" class="modal-btn">Add Album</button>
+        </div>
+    </div>
 </section>
+
+<script src="{{ url_for('static', filename='js/album-manager.js') }}"></script>
+
 {% endblock %}
