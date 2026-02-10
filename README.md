@@ -1,6 +1,6 @@
-# Artist Website (Flask)
+# Rhymamusic (Flask)
 
-A high-end, minimalist artist website built with Python Flask.
+A high-end, minimalist rhymamusic website built with Python Flask.
 
 ## Features
 -   **Server-Side Rendering (SSR)** for SEO optimization.
