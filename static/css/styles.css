@@ -8,6 +8,7 @@
     --font-body: 'Lato', sans-serif;
     --spacing-unit: 1rem;
     --header-height: 80px;
+    --hero-overlay: rgba(255, 255, 255, 0.8);
 }
 
 [data-theme="dark"] {
@@ -16,6 +17,7 @@
     --accent-color: #C5A059;
     --secondary-bg: #1a1a1a;
     --border-color: rgba(255, 255, 255, 0.1);
+    --hero-overlay: rgba(0, 0, 0, 0.85);
 }
 
 /* Custom Theme Toggle (Uiverse.io) */
@@ -291,7 +293,7 @@ footer {
     display: flex;
     justify-content: center;
     align-items: center;
-    background: linear-gradient(rgba(255, 255, 255, 0.8), rgba(255, 255, 255, 0.8)), url('../images/hero-bg.jpg');
+    background: linear-gradient(var(--hero-overlay), var(--hero-overlay)), url('../images/hero-bg.jpg');
     /* Fallback or gradient */
     background-size: cover;
     background-position: center;
