@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Store | Artist Name Official</title>
+    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Syncopate:wght@400;700&family=Inter:wght@300;500&display=swap" rel="stylesheet">
+</head>
+<body class="fade-in">
+
+    <header>
+        <nav>
+            <div class="logo" onclick="window.location.href='index.html'" style="cursor:pointer">
+                BRONZE<span>STUDIOS</span>
+            </div>
+            <div class="nav-links">
+                <a href="index.html">Back to Home</a>
+                <div class="cart-icon" onclick="toggleCart()">
+                    🛒 <span id="cart-count">0</span>
+                </div>
+            </div>
+        </nav>
+    </header>
+
+    <main class="container">
+        <header class="merch-header">
+            <h1>THE COLLECTION</h1>
+            <div class="filters">
+                <button class="filter-btn active">All</button>
+                <button class="filter-btn">Apparel</button>
+                <button class="filter-btn">Vinyl</button>
+            </div>
+        </header>
+
+        <div class="merch-grid">
+            <div class="product-card">
+                <div class="product-img" style="background-image: url('hoodie-black.jpg');">
+                    <button class="add-to-cart" onclick="addToCart('Bronze Hoodie', 65)">Add to Cart</button>
+                </div>
+                <div class="product-info">
+                    <h3>Bronze Hoodie</h3>
+                    <p class="price">$65.00</p>
+                </div>
+            </div>
+
+            <div class="product-card">
+                <div class="product-img" style="background-image: url('vinyl-record.jpg');">
+                    <button class="add-to-cart" onclick="addToCart('Limited Vinyl', 35)">Add to Cart</button>
+                </div>
+                <div class="product-info">
+                    <h3>"Ethereal" Vinyl</h3>
+                    <p class="price">$35.00</p>
+                </div>
+            </div>
+
+            <div class="product-card">
+                <div class="product-img" style="background-image: url('cap.jpg');">
+                    <button class="add-to-cart" onclick="addToCart('Signature Cap', 25)">Add to Cart</button>
+                </div>
+                <div class="product-info">
+                    <h3>Signature Cap</h3>
+                    <p class="price">$25.00</p>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <div id="cart-drawer" class="cart-drawer">
+        <div class="cart-header">
+            <h2>Your Cart</h2>
+            <button class="close-cart" onclick="toggleCart()">×</button>
+        </div>
+        <div id="cart-items">
+            <p class="empty-msg">Your cart is empty.</p>
+        </div>
+        <div class="cart-footer">
+            <div class="total">Total: $<span id="cart-total">0</span></div>
+            <button class="checkout-btn">Checkout</button>
+        </div>
+    </div>
+
+    <script src="merch-script.js"></script>
+</body>
+</html>

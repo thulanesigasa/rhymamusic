@@ -1,0 +1,200 @@
+:root {
+    --bronze: #cd7f32;
+    --bronze-light: #e6ac73;
+    --bg: #ffffff;
+    --text: #1a1a1a;
+    --glass: rgba(255, 255, 255, 0.1);
+    --blur: blur(10px);
+}
+
+@media (prefers-color-scheme: dark) {
+    :root {
+        --bg: #0a0a0a;
+        --text: #f0f0f0;
+        --glass: rgba(255, 255, 255, 0.03);
+    }
+}
+
+body {
+    background-color: var(--bg);
+    color: var(--text);
+    font-family: 'Inter', sans-serif;
+    line-height: 1.6;
+    margin: 0;
+    overflow-x: hidden;
+}
+
+h1, .section-title { font-family: 'Syncopate', sans-serif; letter-spacing: 4px; }
+
+/* Hero Glass Effect */
+.glass-card {
+    background: var(--glass);
+    backdrop-filter: var(--blur);
+    border: 1px solid rgba(205, 127, 50, 0.3);
+    border-radius: 20px;
+    padding: 3rem;
+    max-width: 600px;
+    margin: 100px auto;
+    text-align: center;
+}
+
+/* Music Cards */
+.card {
+    background: var(--glass);
+    border-radius: 15px;
+    padding: 15px;
+    transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    cursor: pointer;
+}
+
+.card:hover {
+    transform: translateY(-10px);
+    border: 1px solid var(--bronze);
+}
+
+.artwork {
+    width: 100%;
+    aspect-ratio: 1/1;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* Play Button functionality style */
+.play-trigger {
+    background: var(--bronze);
+    border: none;
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    color: white;
+    font-size: 1.2rem;
+    cursor: pointer;
+    opacity: 0;
+    transition: 0.3s;
+}
+
+.artwork:hover .play-trigger { opacity: 1; }
+
+/* Merch Special Styling */
+.merch-card { position: relative; overflow: hidden; }
+.price { color: var(--bronze); font-weight: bold; }
+.shop-link { font-size: 0.8rem; text-transform: uppercase; margin-top: 10px; }
+
+/* Merch Page Specifics */
+.merch-header {
+    text-align: center;
+    padding: 60px 0;
+}
+
+.filters {
+    margin-top: 20px;
+    display: flex;
+    justify-content: center;
+    gap: 15px;
+}
+
+.filter-btn {
+    background: transparent;
+    border: 1px solid var(--bronze);
+    color: var(--text);
+    padding: 8px 20px;
+    border-radius: 20px;
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+.filter-btn.active, .filter-btn:hover {
+    background: var(--bronze);
+    color: white;
+}
+
+/* Product Grid */
+.merch-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 40px;
+    padding-bottom: 100px;
+}
+
+.product-card {
+    position: relative;
+}
+
+.product-img {
+    width: 100%;
+    aspect-ratio: 1/1;
+    background-color: var(--card-bg);
+    background-size: cover;
+    background-position: center;
+    border-radius: 12px;
+    display: flex;
+    align-items: flex-end;
+    padding: 15px;
+    overflow: hidden;
+}
+
+.add-to-cart {
+    width: 100%;
+    background: var(--bronze);
+    color: white;
+    border: none;
+    padding: 12px;
+    border-radius: 8px;
+    transform: translateY(60px);
+    transition: 0.4s;
+    cursor: pointer;
+    font-weight: bold;
+}
+
+.product-card:hover .add-to-cart {
+    transform: translateY(0);
+}
+
+/* Cart Drawer */
+.cart-drawer {
+    position: fixed;
+    top: 0;
+    right: -400px; /* Hidden by default */
+    width: 350px;
+    height: 100%;
+    background: var(--bg);
+    border-left: 1px solid var(--bronze);
+    z-index: 1000;
+    transition: 0.4s cubic-bezier(0.77, 0, 0.175, 1);
+    padding: 30px;
+    display: flex;
+    flex-direction: column;
+}
+
+.cart-drawer.open {
+    right: 0;
+}
+
+.cart-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 1px solid var(--glass);
+    padding-bottom: 20px;
+}
+
+.close-cart {
+    background: none;
+    border: none;
+    color: var(--text);
+    font-size: 2rem;
+    cursor: pointer;
+}
+
+.checkout-btn {
+    width: 100%;
+    background: var(--bronze);
+    color: white;
+    border: none;
+    padding: 15px;
+    margin-top: 20px;
+    cursor: pointer;
+    font-weight: bold;
+}
