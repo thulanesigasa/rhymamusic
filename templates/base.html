@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Official website of the artist. Latest music, videos, and tour dates.">
+    <title>{% block title %}Rhyma{% endblock %} | Official Website</title>
+
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700&family=Playfair+Display:ital,wght@0,400;0,700;1,400&display=swap"
+        rel="stylesheet">
+
+    <!-- Styles -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
+    {% block head %}{% endblock %}
+</head>
+
+<body>
+
+    <!-- Navbar -->
+    <nav class="navbar">
+        <div class="logo">
+            <a href="{{ url_for('home') }}">RHYMA</a>
+        </div>
+        <div class="menu-toggle" id="mobile-menu">
+            <span></span>
+            <span></span>
+            <span></span>
+        </div>
+        <ul class="nav-links">
+            <li><a href="{{ url_for('home') }}" class="{{ 'active' if request.endpoint == 'home' else '' }}">Home</a>
+            </li>
+            <li><a href="{{ url_for('music') }}" class="{{ 'active' if request.endpoint == 'music' else '' }}">Music</a>
+            </li>
+            <li><a href="{{ url_for('merch') }}" class="{{ 'active' if request.endpoint == 'merch' else '' }}">Merch</a>
+            </li>
+            <li><a href="{{ url_for('about') }}" class="{{ 'active' if request.endpoint == 'about' else '' }}">About</a>
+            </li>
+            <li><a href="{{ url_for('bookings') }}"
+                    class="{{ 'active' if request.endpoint == 'bookings' else '' }}">Bookings</a></li>
+            <li><a href="{{ url_for('contact') }}"
+                    class="{{ 'active' if request.endpoint == 'contact' else '' }}">Contact</a></li>
+        </ul>
+    </nav>
+
+    <!-- Main Content -->
+    <main>
+        {% block content %}{% endblock %}
+    </main>
+
+    <!-- Sidebar Ad Placeholder -->
+    <!-- <div class="ad-sidebar">AdSense Code Here</div> -->
+
+    <!-- Footer -->
+    <footer>
+        <div class="container">
+            <!-- Footer Ad Placeholder -->
+            <!-- <div class="ad-footer">AdSense Code Here</div> -->
+
+            <div class="footer-section">
+                <h4>Rhyma</h4>
+                <p style="font-size: 0.9rem; color: #666;">Defining the New Sound of Luxury.</p>
+                <div class="social-icons" style="margin-top: 1rem; margin-bottom: 0;">
+                    <a href="#" target="_blank">Instagram</a>
+                    <a href="#" target="_blank">Twitter</a>
+                    <a href="#" target="_blank">Spotify</a>
+                    <a href="#" target="_blank">YouTube</a>
+                </div>
+            </div>
+
+            <div class="footer-section">
+                <h4>Quick Links</h4>
+                <ul class="footer-links">
+                    <li><a href="{{ url_for('home') }}">Home</a></li>
+                    <li><a href="{{ url_for('music') }}">Music</a></li>
+                    <li><a href="{{ url_for('merch') }}">Merchandise</a></li>
+                    <li><a href="{{ url_for('bookings') }}">Bookings</a></li>
+                    <li><a href="{{ url_for('contact') }}">Contact</a></li>
+                </ul>
+            </div>
+
+            <div class="footer-section">
+                <h4>Legal</h4>
+                <ul class="footer-links">
+                    <li><a href="#">Privacy Policy</a></li>
+                    <li><a href="#">Terms of Service</a></li>
+                </ul>
+            </div>
+
+            <p class="copyright">&copy; {{ now.year if now else 2026 }} Rhyma. All Rights Reserved.</p>
+        </div>
+    </footer>
+
+    <!-- Back to Top Button -->
+    <button id="back-to-top" title="Go to top">↑</button>
+
+    <!-- Scripts -->
+    <script>
+        // Simple Mobile Menu Toggle
+        const menuToggle = document.getElementById('mobile-menu');
+        const navLinks = document.querySelector('.nav-links');
+
+        menuToggle.addEventListener('click', () => {
+            navLinks.classList.toggle('active');
+        });
+
+        // Page Transition
+        window.addEventListener('load', () => {
+            document.body.classList.add('loaded');
+        });
+
+        document.querySelectorAll('a').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                // Check if it's an internal link and not a hash link
+                if (this.hostname === window.location.hostname && this.getAttribute('href').indexOf('#') !== 0 && this.getAttribute('target') !== '_blank') {
+                    e.preventDefault();
+                    document.body.classList.remove('loaded');
+                    const href = this.getAttribute('href');
+                    setTimeout(() => {
+                        window.location.href = href;
+                    }, 500); // Matches CSS transition time
+                }
+            });
+        });
+
+        // Back to Top Button
+        const backToTopBtn = document.getElementById('back-to-top');
+
+        window.onscroll = function () {
+            if (document.body.scrollTop > 300 || document.documentElement.scrollTop > 300) {
+                backToTopBtn.classList.add('show');
+            } else {
+                backToTopBtn.classList.remove('show');
+            }
+        };
+
+        backToTopBtn.addEventListener('click', () => {
+            window.scrollTo({
+                top: 0,
+                behavior: 'smooth'
+            });
+        });
+    </script>
+    {% block scripts %}{% endblock %}
+</body>
+
+</html>

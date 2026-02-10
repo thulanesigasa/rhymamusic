@@ -1,0 +1,92 @@
+{% extends 'base.html' %}
+
+{% block title %}Music{% endblock %}
+
+{% block content %}
+<div class="container music-page">
+
+    <!-- 1. Top Performing -->
+    <section class="top-tracks">
+        <h2>Top Tracks</h2>
+        <ul class="track-list">
+            <li class="track-item">
+                <span class="play-btn">▶</span>
+                <span class="track-title">Midnight Gold</span>
+                <span class="track-duration">3:45</span>
+            </li>
+            <li class="track-item">
+                <span class="play-btn">▶</span>
+                <span class="track-title">Velvet Dreams</span>
+                <span class="track-duration">4:12</span>
+            </li>
+            <li class="track-item">
+                <span class="play-btn">▶</span>
+                <span class="track-title">Echoes of Silence</span>
+                <span class="track-duration">3:30</span>
+            </li>
+        </ul>
+    </section>
+
+    <!-- 2. Latest Release -->
+    <section class="latest-release-highlight">
+        <h2>Latest Release</h2>
+        <div class="highlight-card">
+            <div class="highlight-art"></div>
+            <div class="highlight-details">
+                <h3>Golden Era (EP)</h3>
+                <p>A journey through sound and silence.</p>
+                <div class="platform-links">
+                    <a href="#" class="btn-spotify">Spotify</a>
+                    <a href="#" class="btn-apple">Apple Music</a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 3. Upcoming/Unreleased (Hype) -->
+    <section class="hype-section">
+        <h2>Upcoming Drop</h2>
+        <div class="countdown-container">
+            <div class="countdown-timer" id="countdown">
+                <div><span id="days">00</span>Days</div>
+                <div><span id="hours">00</span>Hrs</div>
+                <div><span id="minutes">00</span>Min</div>
+                <div><span id="seconds">00</span>Sec</div>
+            </div>
+            <p class="hype-text">"The Next Chapter Begins"</p>
+            <form class="presave-form">
+                <input type="email" placeholder="Join the Waitlist" required>
+                <button type="submit">Notify Me</button>
+            </form>
+        </div>
+    </section>
+
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+    // Countdown Timer Logic
+    const countDownDate = new Date("Dec 31, 2026 00:00:00").getTime();
+
+    const x = setInterval(function () {
+        const now = new Date().getTime();
+        const distance = countDownDate - now;
+
+        const days = Math.floor(distance / (1000 * 60 * 60 * 24));
+        const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+        const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+        const seconds = Math.floor((distance % (1000 * 60)) / 1000);
+
+        document.getElementById("days").innerHTML = days;
+        document.getElementById("hours").innerHTML = hours;
+        document.getElementById("minutes").innerHTML = minutes;
+        document.getElementById("seconds").innerHTML = seconds;
+
+        if (distance < 0) {
+            clearInterval(x);
+            document.getElementById("countdown").innerHTML = "DROPPED";
+        }
+    }, 1000);
+</script>
+{% endblock %}

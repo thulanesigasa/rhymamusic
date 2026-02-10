@@ -1,0 +1,25 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<section class="hero">
+    <div class="hero-content">
+        <h1>Rhyma</h1>
+        <p class="tagline">Defining the New Sound of Luxury</p>
+        <a href="{{ url_for('music') }}" class="cta-button">Listen Now</a>
+    </div>
+</section>
+
+<section class="featured-preview">
+    <div class="container">
+        <h2>Latest Release</h2>
+        <div class="release-card">
+            <div class="cover-art-placeholder"></div>
+            <div class="release-info">
+                <h3>Album Title</h3>
+                <p>Out Now on All Platforms</p>
+                <a href="#" class="text-link">Stream It &rarr;</a>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}
