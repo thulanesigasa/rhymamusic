@@ -299,11 +299,36 @@ footer {
     display: flex;
     justify-content: center;
     align-items: center;
+    position: relative;
+    overflow: hidden;
+    text-align: center;
+}
+
+.hero::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
     background: linear-gradient(var(--hero-overlay), var(--hero-overlay)), url('../images/hero-bg.jpg');
-    /* Fallback or gradient */
     background-size: cover;
     background-position: center;
-    text-align: center;
+    z-index: 1;
+}
+
+[data-theme="dark"] .hero::before {
+    background: linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.6)), url('../images/zz.JPG.jpeg');
+    background-size: cover;
+    background-position: center;
+    filter: blur(8px);
+    transform: scale(1.1);
+    /* Prevent blurred edges */
+}
+
+.hero>* {
+    position: relative;
+    z-index: 2;
 }
 
 .hero h1 {
