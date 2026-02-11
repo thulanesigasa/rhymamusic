@@ -3,6 +3,10 @@
 {% block title %}Merch{% endblock %}
 
 {% block content %}
+
+<div class="product-img" style="background-image: url('{{ url_for(static, filename=product.image_url) }}');">
+    </div>
+
 <section class="container"
     style="padding: 6rem 2rem; text-align: center; min-height: 60vh; display: flex; flex-direction: column; justify-content: center; align-items: center;">
     <h1 style="margin-bottom: 2rem;">Merchandise</h1>

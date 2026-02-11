@@ -22,17 +22,21 @@
         </section>
 
         <section id="merch" class="admin-section glass-card">
-            <h2>Add Merch</h2>
-            <form action="/admin/add-merch" method="POST" class="admin-form">
-                <div class="form-row">
-                    <input type="text" name="name" placeholder="Item Name">
-                    <input type="number" name="price" placeholder="Price">
-                </div>
-                <button type="submit" class="bronze-btn">Add Product</button>
-            </form>
-        </section>
-    </main>
-</div>
+    <h2>Add New Merch</h2>
+    <form action="/admin/add-merch" method="POST" enctype="multipart/form-data" class="admin-form">
+        <div class="form-row">
+            <input type="text" name="name" placeholder="Item Name" required>
+            <input type="number" name="price" placeholder="Price" step="0.01" required>
+        </div>
+        
+        <div class="file-input-wrapper">
+            <label for="merch-img">Product Image:</label>
+            <input type="file" id="merch-img" name="image" accept="image/*" required>
+        </div>
+        
+        <button type="submit" class="bronze-btn">Upload & Save Product</button>
+    </form>
+</section>
 
 <div class="current-list">
     <h3>Current Merch</h3>

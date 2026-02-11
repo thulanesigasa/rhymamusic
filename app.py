@@ -85,7 +85,37 @@ def login():
             return redirect(url_for('admin'))
     return render_template('login.html')
 
+import os
+from werkzeug.utils import secure_filename
 
+# Configure where to save images
+UPLOAD_FOLDER = 'static/uploads'
+app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
+ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg', 'gif'}
+
+# Ensure the folder exists
+os.makedirs(UPLOAD_FOLDER, exist_ok=True)
+
+def allowed_file(filename):
+    return '.' in filename and filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
+
+@app.route('/admin/add-merch', methods=['POST'])
+@login_required
+def add_merch():
+    name = request.form.get('name')
+    price = request.form.get('price')
+    file = request.files.get('image')
+
+    if file and allowed_file(file.filename):
+        filename = secure_filename(file.filename)
+        file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
+        image_path = f'uploads/{filename}'
+        
+        new_product = Product(name=name, price=price, image_url=image_path)
+        db.session.add(new_product)
+        db.session.commit()
+        
+    return redirect(url_for('admin_dashboard'))
 
 @app.context_processor
 def inject_now():
