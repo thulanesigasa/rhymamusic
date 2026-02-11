@@ -428,6 +428,12 @@ footer {
 }
 
 /* Album Management Styles */
+.featured-preview h2 {
+    text-align: center;
+    font-size: 1.8rem;
+    margin-bottom: 2rem;
+}
+
 .latest-release-header {
     display: flex;
     justify-content: center;
@@ -444,26 +450,10 @@ footer {
     margin-bottom: 2rem;
 }
 
-.album-menu-btn {
-    background: none;
-    border: none;
-    font-size: 1.5rem;
-    cursor: pointer;
-    padding: 0.5rem;
-    transition: transform 0.3s ease;
-}
-
-.album-menu-btn:hover {
-    transform: scale(1.1);
-}
-
-.album-section {
-    text-align: center;
-    margin-bottom: 2rem;
-}
+/* ... existing code ... */
 
 #album-title {
-    font-size: 2rem;
+    font-size: 1.8rem;
     margin-bottom: 2rem;
     color: var(--text-color);
 }
@@ -483,7 +473,7 @@ footer {
     object-fit: cover;
     border-radius: 8px;
     box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
-    cursor: pointer;
+    cursor: default;
     transition: transform 0.3s ease;
 }
 

@@ -210,8 +210,8 @@ function updateDisplay() {
             img.src = `/static/images/${image}`;
             img.alt = `Album image ${index + 1}`;
             img.className = 'album-image';
-            img.addEventListener('click', () => removeImage(index));
-            img.title = 'Click to remove image';
+            // img.addEventListener('click', () => removeImage(index)); // Disabled
+            // img.title = 'Click to remove image'; // Disabled
             imagesContainer.appendChild(img);
         });
     } else {
