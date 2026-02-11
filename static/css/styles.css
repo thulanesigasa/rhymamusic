@@ -352,7 +352,8 @@ footer {
     .hamburger {
         display: block;
         position: absolute;
-        top: 15px;
+        top: 16px;
+        /* (80px header - 48px height) / 2 */
         right: 20px;
         z-index: 1001;
     }
@@ -361,6 +362,7 @@ footer {
     .theme-switch-wrapper {
         position: absolute;
         top: 25px;
+        /* (80px header - 30px height) / 2 */
         right: 80px;
         margin-left: 0;
         z-index: 1001;
