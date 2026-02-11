@@ -3,3 +3,4 @@ flask-sqlalchemy
 flask-login
 spotipy
 psycopg2-binary
+flask-bcrypt
