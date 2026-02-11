@@ -724,6 +724,11 @@ footer {
     font-weight: bold;
 }
 
+[data-theme="dark"] button[type="submit"] {
+    color: var(--bg-color);
+    /* Black text on white background context */
+}
+
 /* Form Styles */
 input,
 textarea,
