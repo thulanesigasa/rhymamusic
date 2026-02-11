@@ -23,7 +23,10 @@ app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg', 'gif'}
 
 # Ensure the folder exists
-os.makedirs(UPLOAD_FOLDER, exist_ok=True)
+try:
+    os.makedirs(UPLOAD_FOLDER, exist_ok=True)
+except OSError:
+    pass # Ignore error on read-only file systems (like Vercel)
 
 db = SQLAlchemy(app)
 login_manager = LoginManager()
