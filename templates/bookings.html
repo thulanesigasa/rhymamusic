@@ -4,16 +4,10 @@
 
 {% block content %}
 <section class="container" style="max-width: 800px; padding: 4rem 2rem;">
-    <h1>Book Rhyma</h1>
+    <h1 style="text-align: center; margin-bottom: 3rem;">Bookings & Inquiries</h1>
     <p style="margin-bottom: 3rem; color: #666;">For bookings, appearances, and features.</p>
 
-    <div
-        style="margin-bottom: 2rem; padding: 1rem; border: 1px solid var(--border-color); border-radius: 8px; text-align: center;">
-        <p>Direct Booking Email: <a href="mailto:bookings@rhymamusic.co.za"
-                style="color: var(--accent-color); font-weight: bold;">bookings@rhymamusic.co.za</a></p>
-    </div>
-
-    <form action="{{ url_for('bookings') }}" method="POST" class="booking-form">
+    <form action="mailto:bookings@rhymamusic.co.za" method="POST" enctype="text/plain" class="booking-form">
         <div class="form-group">
             <label for="contact_person">Contact Person / Promoter</label>
             <input type="text" id="contact_person" name="contact_person" required>
