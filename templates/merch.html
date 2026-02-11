@@ -3,13 +3,38 @@
 {% block title %}Merch{% endblock %}
 
 {% block content %}
-
-<div class="product-img" style="background-image: url('{{ url_for(static, filename=product.image_url) }}');">
-    </div>
-
 <section class="container"
-    style="padding: 6rem 2rem; text-align: center; min-height: 60vh; display: flex; flex-direction: column; justify-content: center; align-items: center;">
+    style="padding: 6rem 2rem; text-align: center; min-height: 60vh; display: flex; flex-direction: column; align-items: center;">
     <h1 style="margin-bottom: 2rem;">Merchandise</h1>
+
+    {% if products %}
+    <div class="merch-grid"
+        style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 2rem; width: 100%; max-width: 1200px;">
+        {% for product in products %}
+        <div class="merch-item"
+            style="background: var(--secondary-bg); border: 1px solid var(--border-color); border-radius: 8px; overflow: hidden; transition: transform 0.3s ease;">
+            {% if product.image_url %}
+            <div class="product-img"
+                style="height: 300px; background-image: url('{{ url_for('static', filename=product.image_url) }}'); background-size: cover; background-position: center;">
+            </div>
+            {% else %}
+            <div class="product-img"
+                style="height: 300px; background-color: #333; display: flex; align-items: center; justify-content: center;">
+                <span style="color: #666;">No Image Available</span>
+            </div>
+            {% endif %}
+            <div class="product-info" style="padding: 1.5rem; text-align: left;">
+                <h3 style="margin-bottom: 0.5rem; font-size: 1.2rem;">{{ product.name }}</h3>
+                <p style="color: var(--accent-color); font-weight: bold; font-size: 1.1rem; margin-bottom: 1rem;">R {{
+                    product.price }}</p>
+                <div style="display: flex; gap: 0.5rem;">
+                    <button class="buy-btn" style="flex: 1;">Add to Cart</button>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+    {% else %}
     <div class="coming-soon-container" style="max-width: 600px;">
         <h2 style="font-size: 3rem; color: var(--accent-color); margin-bottom: 1.5rem;">Coming Soon</h2>
         <p style="font-size: 1.2rem; margin-bottom: 2rem; opacity: 0.8;">
@@ -26,7 +51,6 @@
             </form>
         </div>
     </div>
+    {% endif %}
 </section>
-
-
 {% endblock %}
