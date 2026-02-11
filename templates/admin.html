@@ -1,38 +1,47 @@
-<section class="container glass-card">
-    <h2>Update Merch</h2>
-    <form method="POST" action="/admin">
-        <input type="text" name="name" placeholder="Item Name" required>
-        <input type="number" name="price" placeholder="Price" step="0.01" required>
-        <button type="submit" class="play-btn">Add Product</button>
-    </form>
-</section>
+<div class="admin-wrapper">
+    <aside class="admin-sidebar">
+        <div class="admin-logo">DASHBOARD</div>
+        <nav>
+            <a href="#music" class="side-link">🎵 Music</a>
+            <a href="#merch" class="side-link">👕 Merch</a>
+            <a href="#news" class="side-link">📢 News</a>
+            <a href="/logout" class="side-link logout">Logout</a>
+        </nav>
+    </aside>
 
-<div class="admin-container glass-card">
-    <h1>Artist Dashboard</h1>
-    
-    <section>
-        <h3>Add New Track</h3>
-        <form action="/admin/add-track" method="POST">
-            <input type="text" name="title" placeholder="Song Title">
-            <input type="text" name="url" placeholder="Audio URL (.mp3)">
-            <label><input type="checkbox" name="new_release"> Mark as New Release</label>
-            <button type="submit" class="play-btn">Upload Track</button>
-        </form>
-    </section>
+    <main class="admin-content">
+        <section id="music" class="admin-section glass-card">
+            <h2>Add Track</h2>
+            <form action="/admin/add-track" method="POST" class="admin-form">
+                <div class="form-row">
+                    <input type="text" name="title" placeholder="Track Name">
+                    <input type="text" name="url" placeholder="Audio Link (.mp3)">
+                </div>
+                <button type="submit" class="bronze-btn">Save Track</button>
+            </form>
+        </section>
 
-    <hr>
-
-    <section>
-        <h3>Post Announcement</h3>
-        <form action="/admin/post-news" method="POST">
-            <textarea name="content" placeholder="What's happening?"></textarea>
-            <button type="submit" class="play-btn">Post to Home</button>
-        </form>
-    </section>
+        <section id="merch" class="admin-section glass-card">
+            <h2>Add Merch</h2>
+            <form action="/admin/add-merch" method="POST" class="admin-form">
+                <div class="form-row">
+                    <input type="text" name="name" placeholder="Item Name">
+                    <input type="number" name="price" placeholder="Price">
+                </div>
+                <button type="submit" class="bronze-btn">Add Product</button>
+            </form>
+        </section>
+    </main>
 </div>
 
-{% if latest_news %}
-<div class="announcement-bar" style="border: 1px solid var(--bronze); padding: 10px; margin: 20px;">
-    <strong>LATEST:</strong> {{ latest_news.content }}
+<div class="current-list">
+    <h3>Current Merch</h3>
+    {% for product in products %}
+    <div class="admin-item">
+        <span>{{ product.name }} - ${{ product.price }}</span>
+        <form action="{{ url_for('delete_merch', id=product.id) }}" method="POST">
+            <button type="submit" class="delete-icon">×</button>
+        </form>
+    </div>
+    {% endfor %}
 </div>
-{% endif %}

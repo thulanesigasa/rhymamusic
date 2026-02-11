@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Login | Bronze Studios</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <link href="https://fonts.googleapis.com/css2?family=Syncopate:wght@700&family=Inter:wght@300;500&display=swap" rel="stylesheet">
+</head>
+<body class="login-page">
+
+    <div class="login-container">
+        <div class="glass-card login-box">
+            <div class="logo">BRONZE<span>ADMIN</span></div>
+            <h2>Identity Verification</h2>
+            
+            <form method="POST" action="/login">
+                <div class="input-group">
+                    <label for="username">Manager Username</label>
+                    <input type="text" id="username" name="username" required autocomplete="off">
+                </div>
+                
+                <div class="input-group">
+                    <label for="password">Access Key</label>
+                    <input type="password" id="password" name="password" required>
+                </div>
+                
+                <button type="submit" class="login-btn">Authorize Access</button>
+            </form>
+
+            <a href="/" class="back-link">← Return to Public Site</a>
+        </div>
+    </div>
+
+</body>
+</html>

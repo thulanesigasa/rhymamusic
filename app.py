@@ -6,6 +6,21 @@ from flask_login import LoginManager, UserMixin, login_user, login_required
 
 app = Flask(__name__)
 
+from werkzeug.security import generate_password_hash, check_password_hash
+
+# Update your Login Route
+@app.route('/login', methods=['GET', 'POST'])
+def admin_dashboard():
+    if request.method == 'POST':
+        user = User.query.filter_by(username=request.form['username']).first()
+        # check_password_hash compares the typed password with the stored hash
+        if user and check_password_hash(user.password, request.form['password']):
+            login_user(user)
+            return redirect(url_for('admin'))
+        else:
+            print("Login Failed") # You can add a flash message here later
+    return render_template('login.html')
+
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///site.db'
 app.config['SECRET_KEY'] = 'your_secret_bronze_key'
 db = SQLAlchemy(app)
@@ -16,6 +31,14 @@ class Product(db.Model):
     name = db.Column(db.String(100), nullable=False)
     price = db.Column(db.Float, nullable=False)
     image_url = db.Column(db.String(200))
+
+@app.route('/delete-merch/<int:id>', methods=['POST'])
+@login_required
+def delete_merch(id):
+    item = Product.query.get_or_404(id)
+    db.session.delete(item)
+    db.session.commit()
+    return redirect(url_for('admin_dashboard'))
 
 # Run this once in python console to create: db.create_all()
 
@@ -61,6 +84,8 @@ def login():
             login_user(user)
             return redirect(url_for('admin'))
     return render_template('login.html')
+
+
 
 @app.context_processor
 def inject_now():

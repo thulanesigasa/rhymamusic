@@ -916,3 +916,147 @@ footer .container {
     padding-top: 2rem;
     border-top: 1px solid var(--border-color);
 }
+
+/* Login Specific Styling */
+.login-page {
+    height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: radial-gradient(circle at center, #1a1a1a 0%, #000 100%);
+}
+
+.login-box {
+    width: 100%;
+    max-width: 400px;
+    padding: 40px;
+}
+
+.login-box h2 {
+    font-family: 'Syncopate', sans-serif;
+    font-size: 0.9rem;
+    color: var(--bronze);
+    margin-bottom: 30px;
+    letter-spacing: 2px;
+}
+
+.input-group {
+    text-align: left;
+    margin-bottom: 20px;
+}
+
+.input-group label {
+    display: block;
+    font-size: 0.8rem;
+    margin-bottom: 8px;
+    color: var(--bronze-light);
+    text-transform: uppercase;
+}
+
+.input-group input {
+    width: 100%;
+    padding: 12px;
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(205, 127, 50, 0.2);
+    border-radius: 5px;
+    color: white;
+    outline: none;
+    transition: 0.3s;
+}
+
+.input-group input:focus {
+    border-color: var(--bronze);
+    background: rgba(255, 255, 255, 0.1);
+}
+
+.login-btn {
+    width: 100%;
+    background: var(--bronze);
+    color: white;
+    padding: 15px;
+    border: none;
+    border-radius: 5px;
+    font-weight: bold;
+    text-transform: uppercase;
+    cursor: pointer;
+    transition: 0.3s;
+    letter-spacing: 1px;
+}
+
+.login-btn:hover {
+    background: #b36b28;
+    box-shadow: 0 0 15px rgba(205, 127, 50, 0.4);
+}
+
+.back-link {
+    display: block;
+    margin-top: 25px;
+    font-size: 0.8rem;
+    color: var(--text);
+    opacity: 0.6;
+    text-decoration: none;
+}
+
+.back-link:hover { opacity: 1; color: var(--bronze); }
+
+/* Update these in your style.css */
+.login-container {
+    perspective: 1000px;
+}
+
+.login-box {
+    background: rgba(10, 10, 10, 0.8);
+    backdrop-filter: blur(15px);
+    border: 1px solid rgba(205, 127, 50, 0.2);
+    box-shadow: 0 15px 35px rgba(0, 0, 0, 0.5), 0 0 15px rgba(205, 127, 50, 0.1);
+    transform: translateY(0);
+    transition: transform 0.3s ease, border-color 0.3s ease;
+}
+
+.login-box:hover {
+    border-color: var(--bronze);
+    transform: translateY(-5px);
+}
+
+.login-btn {
+    background: linear-gradient(135deg, var(--bronze) 0%, #8e5a21 100%);
+    box-shadow: 0 4px 15px rgba(205, 127, 50, 0.3);
+}
+
+.admin-wrapper {
+    display: flex;
+    min-height: 100vh;
+}
+
+.admin-sidebar {
+    width: 250px;
+    background: #0a0a0a;
+    border-right: 1px solid var(--bronze);
+    padding: 20px;
+}
+
+.admin-content {
+    flex-grow: 1;
+    padding: 40px;
+    background: #050505;
+}
+
+.admin-section {
+    margin-bottom: 30px;
+    padding: 30px;
+}
+
+.admin-item {
+    display: flex;
+    justify-content: space-between;
+    padding: 10px;
+    border-bottom: 1px solid rgba(205, 127, 50, 0.1);
+}
+
+.delete-icon {
+    background: none;
+    border: none;
+    color: #ff4d4d;
+    cursor: pointer;
+    font-size: 1.2rem;
+}
