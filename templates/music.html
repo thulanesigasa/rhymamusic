@@ -10,6 +10,15 @@
         <h2>Top Tracks</h2>
         <div class="spotify-embed-container"
             style="display: flex; flex-direction: column; gap: 1rem; align-items: center;">
+            {% if top_tracks %}
+            {% for track in top_tracks %}
+            <iframe style="border-radius:12px"
+                src="https://open.spotify.com/embed/track/{{ track.id }}?utm_source=generator&theme=0" width="100%"
+                height="152" frameBorder="0" allowfullscreen=""
+                allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture"
+                loading="lazy"></iframe>
+            {% endfor %}
+            {% else %}
             <iframe style="border-radius:12px"
                 src="https://open.spotify.com/embed/track/3b3VmMwvuKGPDNcUdYmLBh?utm_source=generator&theme=0"
                 width="100%" height="152" frameBorder="0" allowfullscreen=""
@@ -25,6 +34,7 @@
                 width="100%" height="152" frameBorder="0" allowfullscreen=""
                 allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture"
                 loading="lazy"></iframe>
+            {% endif %}
         </div>
     </section>
 
@@ -32,11 +42,19 @@
     <section class="latest-release-highlight">
         <h2>Latest EP</h2>
         <div class="spotify-embed-container" style="display: flex; justify-content: center;">
+            {% if settings and settings.latest_release_id %}
+            <iframe style="border-radius:12px"
+                src="https://open.spotify.com/embed/album/{{ settings.latest_release_id }}?utm_source=generator"
+                width="100%" height="352" frameBorder="0" allowfullscreen=""
+                allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture"
+                loading="lazy"></iframe>
+            {% else %}
             <iframe style="border-radius:12px"
                 src="https://open.spotify.com/embed/album/4zdanK4qRRjCe0N4XXToBt?utm_source=generator" width="100%"
                 height="352" frameBorder="0" allowfullscreen=""
                 allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture"
                 loading="lazy"></iframe>
+            {% endif %}
         </div>
     </section>
 
@@ -65,7 +83,8 @@
 {% block scripts %}
 <script>
     // Countdown Timer Logic
-    const countDownDate = new Date("Dec 31, 2026 00:00:00").getTime();
+    const dropDateStr = "{{ settings.upcoming_drop if settings and settings.upcoming_drop else 'Dec 31, 2026 00:00:00' }}";
+    const countDownDate = new Date(dropDateStr).getTime();
 
     const x = setInterval(function () {
         const now = new Date().getTime();
