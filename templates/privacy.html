@@ -1,0 +1,45 @@
+{% extends 'base.html' %}
+
+{% block title %}Privacy Policy{% endblock %}
+
+{% block content %}
+<section class="container" style="padding: 4rem 2rem; max-width: 800px;">
+    <h1 style="text-align: center; margin-bottom: 2rem;">Privacy Policy</h1>
+
+    <div class="legal-content" style="line-height: 1.6; color: var(--text-color);">
+        <p>Last updated: {{ now.year if now else 2026 }}</p>
+
+        <h2 style="margin-top: 2rem; margin-bottom: 1rem;">1. Introduction</h2>
+        <p>Welcome to Rhyma's official website. We respect your privacy and are committed to protecting your personal
+            data. This privacy policy will inform you as to how we look after your personal data when you visit our
+            website (regardless of where you visit it from) and tell you about your privacy rights and how the law
+            protects you.</p>
+
+        <h2 style="margin-top: 2rem; margin-bottom: 1rem;">2. Information We Collect</h2>
+        <p>We may collect, use, store and transfer different kinds of personal data about you which we have grouped
+            together follows:</p>
+        <ul>
+            <li><strong>Identity Data</strong> includes first name, last name, username or similar identifier.</li>
+            <li><strong>Contact Data</strong> includes billing address, delivery address, email address and telephone
+                number.</li>
+            <li><strong>Technical Data</strong> includes internet protocol (IP) address, your login data, browser type
+                and version, time zone setting and location, browser plug-in types and versions, operating system and
+                platform and other technology on the devices you use to access this website.</li>
+        </ul>
+
+        <h2 style="margin-top: 2rem; margin-bottom: 1rem;">3. How We Use Your Information</h2>
+        <p>We will only use your personal data when the law allows us to. Most commonly, we will use your personal data
+            in the following circumstances:</p>
+        <ul>
+            <li>Where we need to perform the contract we are about to enter into or have entered into with you.</li>
+            <li>Where it is necessary for our legitimate interests (or those of a third party) and your interests and
+                fundamental rights do not override those interests.</li>
+            <li>Where we need to comply with a legal or regulatory obligation.</li>
+        </ul>
+
+        <h2 style="margin-top: 2rem; margin-bottom: 1rem;">4. Contact Us</h2>
+        <p>If you have any questions about this privacy policy or our privacy practices, please contact us through the
+            <a href="{{ url_for('contact') }}">Contact page</a>.</p>
+    </div>
+</section>
+{% endblock %}

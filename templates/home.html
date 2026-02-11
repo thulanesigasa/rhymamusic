@@ -3,6 +3,13 @@
 {% block content %}
 <section class="hero">
     <div class="hero-content">
+        {% if settings and settings.upcoming_drop %}
+        <div class="upcoming-drop-banner"
+            style="margin-bottom: 1rem; background: rgba(0,0,0,0.6); padding: 0.5rem 1rem; border-radius: 8px; border: 1px solid var(--primary-color);">
+            <h3 style="margin:0; font-size: 1.2rem; color: var(--primary-color);">NEXT DROP: {{ settings.upcoming_drop
+                }}</h3>
+        </div>
+        {% endif %}
         <h1>Rhyma</h1>
         <p class="tagline">Defining the New Sound of Luxury</p>
         <a href="{{ url_for('music') }}" class="cta-button">Listen Now</a>
@@ -13,11 +20,19 @@
     <div class="container">
         <h2>Latest Single</h2>
         <div class="spotify-embed-container" style="display: flex; justify-content: center; margin-bottom: 2rem;">
+            {% if settings and settings.latest_release_id %}
+            <iframe style="border-radius:12px"
+                src="https://open.spotify.com/embed/album/{{ settings.latest_release_id }}?utm_source=generator&theme=0"
+                width="100%" height="352" frameBorder="0" allowfullscreen=""
+                allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture"
+                loading="lazy"></iframe>
+            {% else %}
             <iframe style="border-radius:12px"
                 src="https://open.spotify.com/embed/track/2FJGPXuJs9809AdKZ7fGPj?utm_source=generator&theme=0"
                 width="100%" height="352" frameBorder="0" allowfullscreen=""
                 allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture"
                 loading="lazy"></iframe>
+            {% endif %}
         </div>
 
         <div class="album-section">
@@ -44,7 +59,8 @@
 
         <div class="release-info">
             <p>Out Now on All Platforms</p>
-            <a href="https://youtube.com/rhymangn" target="_blank" class="text-link">Stream on YouTube &rarr;</a>
+            <a href="https://youtube.com/rhymangn" target="_blank" class="text-link">Stream on YouTube <i
+                    class="fa-brands fa-youtube"></i> &rarr;</a>
         </div>
     </div>
 
