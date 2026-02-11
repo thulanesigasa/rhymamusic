@@ -34,11 +34,16 @@
         <div class="logo">
             <a href="{{ url_for('home') }}">RHYMA</a>
         </div>
-        <div class="menu-toggle" id="mobile-menu">
-            <span></span>
-            <span></span>
-            <span></span>
-        </div>
+        <!-- From Uiverse.io by prakashdc -->
+        <label class="hamburger" id="mobile-menu-label">
+            <input type="checkbox" id="mobile-menu-checkbox" />
+            <svg viewBox="0 0 32 32">
+                <path
+                    d="M27 10 13 10C10.8 10 9 8.2 9 6 9 3.5 10.8 2 13 2 15.2 2 17 3.8 17 6L17 26C17 28.2 18.8 30 21 30 23.2 30 25 28.2 25 26 25 23.8 23.2 22 21 22L7 22"
+                    class="line line-top-bottom"></path>
+                <path d="M7 16 27 16" class="line"></path>
+            </svg>
+        </label>
         <ul class="nav-links">
             <li><a href="{{ url_for('home') }}" class="{{ 'active' if request.endpoint == 'home' else '' }}">Home</a>
             </li>
@@ -126,11 +131,23 @@
     <!-- Scripts -->
     <script>
         // Simple Mobile Menu Toggle
-        const menuToggle = document.getElementById('mobile-menu');
+        const menuCheckbox = document.getElementById('mobile-menu-checkbox');
         const navLinks = document.querySelector('.nav-links');
 
-        menuToggle.addEventListener('click', () => {
-            navLinks.classList.toggle('active');
+        menuCheckbox.addEventListener('change', () => {
+            if (menuCheckbox.checked) {
+                navLinks.classList.add('active');
+            } else {
+                navLinks.classList.remove('active');
+            }
+        });
+
+        // Close menu when a link is clicked
+        document.querySelectorAll('.nav-links a').forEach(link => {
+            link.addEventListener('click', () => {
+                navLinks.classList.remove('active');
+                menuCheckbox.checked = false; // Reset animation
+            });
         });
 
         // Page Transition
