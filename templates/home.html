@@ -18,12 +18,22 @@
                 <h3 id="album-title">Album Title</h3>
             </div>
             <div class="album-images-container">
-                <img src="{{ url_for('static', filename='images/DSC00971.jpg.jpeg') }}" alt="Album Cover 1"
-                    class="album-image">
-                <img src="{{ url_for('static', filename='images/IMG_8984.JPG.jpeg') }}" alt="Album Cover 2"
-                    class="album-image">
-                <img src="{{ url_for('static', filename='images/STAMINA.jpg.jpeg') }}" alt="Album Cover 3"
-                    class="album-image">
+                <div class="album-item">
+                    <img src="{{ url_for('static', filename='images/IMG_8984.JPG.jpeg') }}" alt="Standout Album Cover"
+                        class="album-image">
+                    <div class="album-caption">
+                        <p class="album-name">Standout</p>
+                        <p class="album-artist">Rhyma</p>
+                    </div>
+                </div>
+                <div class="album-item">
+                    <img src="{{ url_for('static', filename='images/STAMINA.jpg.jpeg') }}" alt="Stamina Album Cover"
+                        class="album-image">
+                    <div class="album-caption">
+                        <p class="album-name">Stamina</p>
+                        <p class="album-artist">Rhyma</p>
+                    </div>
+                </div>
             </div>
         </div>
 
@@ -80,6 +90,6 @@
     </div>
 </section>
 
-<script src="{{ url_for('static', filename='js/album-manager.js') }}"></script>
+
 
 {% endblock %}
