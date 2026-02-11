@@ -9,11 +9,16 @@ import os
 app = Flask(__name__)
 # app.config['SECRET_KEY'] = 'your_secret_key' # Optional if no sessions used
 
-app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///site.db'
-app.config['SECRET_KEY'] = 'your_secret_bronze_key'
+app.config['SECRET_KEY'] = os.environ.get('SECRET_KEY', 'your_secret_bronze_key')
+
+# Database Configuration
+uri = os.environ.get('DATABASE_URL', 'sqlite:///site.db')
+if uri.startswith("postgres://"):
+    uri = uri.replace("postgres://", "postgresql://", 1)
+app.config['SQLALCHEMY_DATABASE_URI'] = uri
 
 # Configure where to save images
-UPLOAD_FOLDER = 'static/uploads'
+UPLOAD_FOLDER = os.environ.get('UPLOAD_FOLDER', 'static/uploads')
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg', 'gif'}
 
