@@ -1,26 +1,15 @@
-from flask import Flask, render_template, request
-from datetime import datetime
 from flask import Flask, render_template, request, redirect, url_for
-from flask_sqlalchemy import SQLAlchemy
-from flask_login import LoginManager, UserMixin, login_user, login_required
+from datetime import datetime
 
 app = Flask(__name__)
+# app.config['SECRET_KEY'] = 'your_secret_key' # Optional if no sessions used
 
-app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///site.db'
-app.config['SECRET_KEY'] = 'your_secret_bronze_key'
-db = SQLAlchemy(app)
+@app.context_processor
+def inject_now():
+    return {'now': datetime.utcnow()}
 
-# Models for Music and Announcements
-class Track(db.Model):
-    id = db.Column(db.Integer, primary_key=True)
-    title = db.Column(db.String(100), nullable=False)
-    audio_url = db.Column(db.String(200)) # Link to mp3
-    is_new_release = db.Column(db.Boolean, default=False)
+# Models removed for static client-side version
 
-class Announcement(db.Model):
-    id = db.Column(db.Integer, primary_key=True)
-    content = db.Column(db.Text, nullable=False)
-    date_posted = db.Column(db.DateTime, default=db.func.current_timestamp())
 
 @app.context_processor
 def inject_now():
