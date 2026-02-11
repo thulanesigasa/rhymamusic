@@ -1,11 +1,10 @@
-from flask import Flask, render_template, request
-from datetime import datetime
 from flask import Flask, render_template, request, redirect, url_for
-from flask_sqlalchemy import SQLAlchemy
-from flask_login import LoginManager, UserMixin, login_user, login_required
+from datetime import datetime
 
 app = Flask(__name__)
+# app.config['SECRET_KEY'] = 'your_secret_key' # Optional if no sessions used
 
+<<<<<<< HEAD
 from werkzeug.security import generate_password_hash, check_password_hash
 
 # Update your Login Route
@@ -24,14 +23,15 @@ def admin_dashboard():
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///site.db'
 app.config['SECRET_KEY'] = 'your_secret_bronze_key'
 db = SQLAlchemy(app)
+=======
+@app.context_processor
+def inject_now():
+    return {'now': datetime.utcnow()}
+>>>>>>> refs/remotes/origin/main
 
-# Database Model for Merch
-class Product(db.Model):
-    id = db.Column(db.Integer, primary_key=True)
-    name = db.Column(db.String(100), nullable=False)
-    price = db.Column(db.Float, nullable=False)
-    image_url = db.Column(db.String(200))
+# Models removed for static client-side version
 
+<<<<<<< HEAD
 @app.route('/delete-merch/<int:id>', methods=['POST'])
 @login_required
 def delete_merch(id):
@@ -84,6 +84,8 @@ def login():
             login_user(user)
             return redirect(url_for('admin'))
     return render_template('login.html')
+=======
+>>>>>>> refs/remotes/origin/main
 
 import os
 from werkzeug.utils import secure_filename
