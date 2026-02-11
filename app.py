@@ -10,31 +10,6 @@ app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///site.db'
 app.config['SECRET_KEY'] = 'your_secret_bronze_key'
 db = SQLAlchemy(app)
 
-# Database Model for Merch
-class Product(db.Model):
-    id = db.Column(db.Integer, primary_key=True)
-    name = db.Column(db.String(100), nullable=False)
-    price = db.Column(db.Float, nullable=False)
-    image_url = db.Column(db.String(200))
-
-# Run this once in python console to create: db.create_all()
-
-@app.route('/admin', methods=['GET', 'POST'])
-# @login_required  <-- Add this once you set up a login page
-def admin():
-    if request.method == 'POST':
-        # Get data from the form
-        new_name = request.form.get('name')
-        new_price = request.form.get('price')
-        
-        # Save to database
-        new_product = Product(name=new_name, price=new_price)
-        db.session.add(new_product)
-        db.session.commit()
-        return redirect(url_for('merch'))
-        
-    return render_template('admin.html')
-
 # Models for Music and Announcements
 class Track(db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -46,21 +21,6 @@ class Announcement(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     content = db.Column(db.Text, nullable=False)
     date_posted = db.Column(db.DateTime, default=db.func.current_timestamp())
-
-# User Model for Admin Login
-class User(UserMixin, db.Model):
-    id = db.Column(db.Integer, primary_key=True)
-    username = db.Column(db.String(20), unique=True, nullable=False)
-    password = db.Column(db.String(60), nullable=False)
-
-@app.route('/login', methods=['GET', 'POST'])
-def login():
-    if request.method == 'POST':
-        user = User.query.filter_by(username=request.form['username']).first()
-        if user and user.password == request.form['password']: # Use hashing in production!
-            login_user(user)
-            return redirect(url_for('admin'))
-    return render_template('login.html')
 
 @app.context_processor
 def inject_now():
