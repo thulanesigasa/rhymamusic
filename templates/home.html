@@ -12,27 +12,32 @@
 <section class="featured-preview">
     <div class="container">
         <h2>Latest Single</h2>
+        <div class="spotify-embed-container" style="display: flex; justify-content: center; margin-bottom: 2rem;">
+            <iframe style="border-radius:12px"
+                src="https://open.spotify.com/embed/track/2FJGPXuJs9809AdKZ7fGPj?utm_source=generator&theme=0"
+                width="100%" height="352" frameBorder="0" allowfullscreen=""
+                allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture"
+                loading="lazy"></iframe>
+        </div>
 
         <div class="album-section">
             <div class="album-title-header">
                 <h3 id="album-title">Album Title</h3>
             </div>
             <div class="album-images-container">
-                <div class="album-item">
-                    <img src="{{ url_for('static', filename='images/IMG_8984.JPG.jpeg') }}" alt="Standout Album Cover"
-                        class="album-image">
-                    <div class="album-caption">
-                        <p class="album-name">Standout</p>
-                        <p class="album-artist">Rhyma</p>
-                    </div>
+                <div class="album-item" style="width: 300px;">
+                    <iframe style="border-radius:12px"
+                        src="https://open.spotify.com/embed/album/11G7xf6VQHjhSSCtW6FRdt?utm_source=generator"
+                        width="100%" height="352" frameBorder="0" allowfullscreen=""
+                        allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture"
+                        loading="lazy"></iframe>
                 </div>
-                <div class="album-item">
-                    <img src="{{ url_for('static', filename='images/STAMINA.jpg.jpeg') }}" alt="Stamina Album Cover"
-                        class="album-image">
-                    <div class="album-caption">
-                        <p class="album-name">Stamina</p>
-                        <p class="album-artist">Rhyma</p>
-                    </div>
+                <div class="album-item" style="width: 300px;">
+                    <iframe style="border-radius:12px"
+                        src="https://open.spotify.com/embed/album/3YUXPunrRpyRj2zv3ufbEQ?utm_source=generator"
+                        width="100%" height="352" frameBorder="0" allowfullscreen=""
+                        allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture"
+                        loading="lazy"></iframe>
                 </div>
             </div>
         </div>
