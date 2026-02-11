@@ -315,20 +315,33 @@ footer {
 
 @media (max-width: 768px) {
     .nav-links {
-        display: none;
+        /* Start hidden (Slide Up state) */
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        width: 100%;
+        background-color: var(--bg-color);
         position: absolute;
         top: var(--header-height);
         left: 0;
-        width: 100%;
-        background-color: var(--bg-color);
-        flex-direction: column;
-        align-items: center;
-        padding: 2rem 0;
-        border-bottom: 1px solid var(--border-color);
+        z-index: 1000;
+
+        /* Animation Props */
+        max-height: 0;
+        opacity: 0;
+        overflow: hidden;
+        padding: 0;
+        border-bottom: none;
+        transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
     }
 
     .nav-links.active {
-        display: flex;
+        /* End visible (Slide Down state) */
+        max-height: 100vh;
+        /* approximate max height */
+        opacity: 1;
+        padding: 2rem 0;
+        border-bottom: 1px solid var(--border-color);
     }
 
     /* Hide old toggle, show new one */
@@ -341,6 +354,15 @@ footer {
         position: absolute;
         top: 15px;
         right: 20px;
+        z-index: 1001;
+    }
+
+    /* Move theme toggle to the left of hamburger */
+    .theme-switch-wrapper {
+        position: absolute;
+        top: 25px;
+        right: 80px;
+        margin-left: 0;
         z-index: 1001;
     }
 }
