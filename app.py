@@ -35,6 +35,33 @@ def admin():
         
     return render_template('admin.html')
 
+# Models for Music and Announcements
+class Track(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    title = db.Column(db.String(100), nullable=False)
+    audio_url = db.Column(db.String(200)) # Link to mp3
+    is_new_release = db.Column(db.Boolean, default=False)
+
+class Announcement(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    content = db.Column(db.Text, nullable=False)
+    date_posted = db.Column(db.DateTime, default=db.func.current_timestamp())
+
+# User Model for Admin Login
+class User(UserMixin, db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    username = db.Column(db.String(20), unique=True, nullable=False)
+    password = db.Column(db.String(60), nullable=False)
+
+@app.route('/login', methods=['GET', 'POST'])
+def login():
+    if request.method == 'POST':
+        user = User.query.filter_by(username=request.form['username']).first()
+        if user and user.password == request.form['password']: # Use hashing in production!
+            login_user(user)
+            return redirect(url_for('admin'))
+    return render_template('login.html')
+
 @app.context_processor
 def inject_now():
     return {'now': datetime.utcnow()}
