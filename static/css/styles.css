@@ -367,11 +367,12 @@ footer {
     }
 
     /* Move theme toggle to the far right */
+    /* Move theme toggle to the far right */
     .theme-switch-wrapper {
         position: absolute;
-        top: 25px;
+        top: 34px;
+        /* Increased to move down significantly */
         right: 20px;
-        /* Far right */
         left: auto;
         margin-left: 0;
         z-index: 1001;
