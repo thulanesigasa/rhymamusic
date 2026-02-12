@@ -352,18 +352,27 @@ footer {
     .hamburger {
         display: block;
         position: absolute;
-        top: 16px;
-        /* (80px header - 48px height) / 2 */
-        right: 20px;
+        top: 20px;
+        /* Adjusted for smaller size: (80 - 40) / 2 */
+        left: 50%;
+        transform: translateX(-50%);
+        right: auto;
         z-index: 1001;
     }
 
-    /* Move theme toggle to the left of hamburger */
+    .hamburger svg {
+        height: 2.5em;
+        /* Reduced from 3em */
+        transition: transform 600ms cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    /* Move theme toggle to the far right */
     .theme-switch-wrapper {
         position: absolute;
         top: 25px;
-        /* (80px header - 30px height) / 2 */
-        right: 80px;
+        right: 20px;
+        /* Far right */
+        left: auto;
         margin-left: 0;
         z-index: 1001;
     }
