@@ -1,0 +1,381 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Official website of the artist. Latest music, videos, and tour dates.">
+    <title>{% block title %}Rhyma{% endblock %} | Official Website</title>
+
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700&family=Playfair+Display:ital,wght@0,400;0,700;1,400&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <!-- Styles -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
+    <script>
+        // Apply theme immediately to prevent flash
+        const savedTheme = localStorage.getItem('theme');
+        if (savedTheme) {
+            document.documentElement.setAttribute('data-theme', savedTheme);
+        }
+    </script>
+    {% block head %}{% endblock %}
+</head>
+
+<body>
+
+    <!-- Navbar -->
+    <nav class="navbar">
+        <div class="logo">
+            <a href="{{ url_for('home') }}">RHYMA</a>
+        </div>
+        <!-- From Uiverse.io by prakashdc -->
+        <label class="hamburger" id="mobile-menu-label">
+            <input type="checkbox" id="mobile-menu-checkbox" />
+            <svg viewBox="0 0 32 32">
+                <path
+                    d="M27 10 13 10C10.8 10 9 8.2 9 6 9 3.5 10.8 2 13 2 15.2 2 17 3.8 17 6L17 26C17 28.2 18.8 30 21 30 23.2 30 25 28.2 25 26 25 23.8 23.2 22 21 22L7 22"
+                    class="line line-top-bottom"></path>
+                <path d="M7 16 27 16" class="line"></path>
+            </svg>
+        </label>
+        <ul class="nav-links">
+            <li><a href="{{ url_for('home') }}" class="{{ 'active' if request.endpoint == 'home' else '' }}">Home</a>
+            </li>
+            <li><a href="{{ url_for('music') }}" class="{{ 'active' if request.endpoint == 'music' else '' }}">Music</a>
+            </li>
+            <li><a href="{{ url_for('merch') }}" class="{{ 'active' if request.endpoint == 'merch' else '' }}">Merch</a>
+            </li>
+            <li><a href="{{ url_for('about') }}" class="{{ 'active' if request.endpoint == 'about' else '' }}">About</a>
+            </li>
+            <li><a href="{{ url_for('bookings') }}"
+                    class="{{ 'active' if request.endpoint == 'bookings' else '' }}">Bookings</a></li>
+            <li><a href="{{ url_for('contact') }}"
+                    class="{{ 'active' if request.endpoint == 'contact' else '' }}">Contact</a></li>
+        </ul>
+        <label class="theme-switch-wrapper" title="Toggle Theme">
+            <input type="checkbox" id="theme-checkbox">
+            <svg viewBox="0 0 384 512" height="1em" xmlns="http://www.w3.org/2000/svg" class="moon">
+                <path
+                    d="M223.5 32C100 32 0 132.3 0 256S100 480 223.5 480c60.6 0 115.5-24.2 155.8-63.4c5-4.9 6.3-12.5 3.1-18.7s-10.1-9.7-17-8.5c-9.8 1.7-19.8 2.6-30.1 2.6c-96.9 0-175.5-78.8-175.5-176c0-65.8 36-123.1 89.3-153.3c6.1-3.5 9.2-10.5 7.7-17.3s-7.3-11.9-14.3-12.5c-6.3-.5-12.6-.8-19-.8z">
+                </path>
+            </svg>
+            <svg viewBox="0 0 512 512" height="1em" xmlns="http://www.w3.org/2000/svg" class="sun">
+                <path
+                    d="M361.5 1.2c5 2.1 8.6 6.6 9.6 11.9L391 121l107.9 19.8c5.3 1 9.8 4.6 11.9 9.6s1.5 10.7-1.6 15.2L446.9 256l62.3 90.3c3.1 4.5 3.7 10.2 1.6 15.2s-6.6 8.6-11.9 9.6L391 391 371.1 498.9c-1 5.3-4.6 9.8-9.6 11.9s-10.7 1.5-15.2-1.6L256 446.9l-90.3 62.3c-4.5 3.1-10.2 3.7-15.2 1.6s-8.6-6.6-9.6-11.9L121 391 13.1 371.1c-5.3-1-9.8-4.6-11.9-9.6s-1.5-10.7 1.6-15.2L65.1 256 2.8 165.7c-3.1-4.5-3.7-10.2-1.6-15.2s6.6-8.6 11.9-9.6L121 121 140.9 13.1c1-5.3 4.6-9.8 9.6-11.9s10.7-1.5 15.2 1.6L256 65.1 346.3 2.8c4.5-3.1 10.2-3.7 15.2-1.6zM160 256a96 96 0 1 1 192 0 96 96 0 1 1 -192 0zm224 0a128 128 0 1 0 -256 0 128 128 0 1 0 256 0z">
+                </path>
+            </svg>
+        </label>
+    </nav>
+
+    <!-- Main Content -->
+    <main>
+        {% block content %}{% endblock %}
+    </main>
+
+    <!-- Sidebar Ad Placeholder -->
+    <!-- <div class="ad-sidebar">AdSense Code Here</div> -->
+
+    <!-- Footer -->
+    <footer>
+        <div class="container">
+            <!-- Footer Ad Placeholder -->
+            <!-- <div class="ad-footer">AdSense Code Here</div> -->
+
+            <div class="footer-section">
+                <h4>Rhyma</h4>
+                <p style="font-size: 0.9rem; color: #666;">Defining the New Sound of Luxury.</p>
+                <div class="social-icons" style="margin-top: 1rem; margin-bottom: 0;">
+                    <a href="https://music.apple.com/us/artist/rhyma/1232075857" target="_blank" title="Apple Music"><i
+                            class="fa-brands fa-apple"></i></a>
+                    <a href="https://www.tiktok.com/@rhymangn" target="_blank" title="TikTok"><i
+                            class="fa-brands fa-tiktok"></i></a>
+                    <a href="https://www.instagram.com/rhymangn" target="_blank" title="Instagram"><i
+                            class="fa-brands fa-instagram"></i></a>
+                    <a href="https://youtube.com/rhymangn" target="_blank" title="YouTube"><i
+                            class="fa-brands fa-youtube"></i></a>
+                    <a href="https://open.spotify.com/search/RHYMA" target="_blank" title="Spotify"><i
+                            class="fa-brands fa-spotify"></i></a>
+                </div>
+            </div>
+
+            <div class="footer-section">
+                <h4>Quick Links</h4>
+                <ul class="footer-links">
+                    <li><a href="{{ url_for('music') }}">Music</a></li>
+                    <li><a href="{{ url_for('bookings') }}">Bookings</a></li>
+                    <li><a href="{{ url_for('contact') }}">Contact</a></li>
+                </ul>
+            </div>
+
+            <div class="footer-section">
+                <h4>Legal</h4>
+                <ul class="footer-links">
+                    <li><a href="{{ url_for('privacy') }}">Privacy Policy</a></li>
+                    <li><a href="{{ url_for('terms') }}">Terms of Service</a></li>
+                </ul>
+            </div>
+
+            <p class="copyright">&copy; {{ now.year if now else 2026 }} Rhyma. All Rights Reserved.</p>
+        </div>
+    </footer>
+
+    <!-- Back to Top Button -->
+    <button id="back-to-top" title="Go to top">↑</button>
+
+    <!-- Scripts -->
+    <script>
+        // Simple Mobile Menu Toggle
+        const menuCheckbox = document.getElementById('mobile-menu-checkbox');
+        const navLinks = document.querySelector('.nav-links');
+
+        menuCheckbox.addEventListener('change', () => {
+            if (menuCheckbox.checked) {
+                navLinks.classList.add('active');
+            } else {
+                navLinks.classList.remove('active');
+            }
+        });
+
+        // Close menu when a link is clicked
+        document.querySelectorAll('.nav-links a').forEach(link => {
+            link.addEventListener('click', () => {
+                navLinks.classList.remove('active');
+                menuCheckbox.checked = false; // Reset animation
+            });
+        });
+
+        // Page Transition
+        window.addEventListener('load', () => {
+            document.body.classList.add('loaded');
+        });
+
+        document.querySelectorAll('a').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                // Check if it's an internal link and not a hash link
+                if (this.hostname === window.location.hostname && this.getAttribute('href').indexOf('#') !== 0 && this.getAttribute('target') !== '_blank') {
+                    e.preventDefault();
+                    document.body.classList.remove('loaded');
+                    const href = this.getAttribute('href');
+                    setTimeout(() => {
+                        window.location.href = href;
+                    }, 500); // Matches CSS transition time
+                }
+            });
+        });
+
+        // Back to Top Button
+        const backToTopBtn = document.getElementById('back-to-top');
+
+        window.onscroll = function () {
+            if (document.body.scrollTop > 300 || document.documentElement.scrollTop > 300) {
+                backToTopBtn.classList.add('show');
+            } else {
+                backToTopBtn.classList.remove('show');
+            }
+        };
+
+        backToTopBtn.addEventListener('click', () => {
+            window.scrollTo({
+                top: 0,
+                behavior: 'smooth'
+            });
+        });
+
+        // Theme Toggle
+        const themeCheckbox = document.getElementById('theme-checkbox');
+        const root = document.documentElement;
+
+        // Check for saved theme
+        const storedTheme = localStorage.getItem('theme');
+        if (storedTheme) {
+            root.setAttribute('data-theme', storedTheme);
+            if (storedTheme === 'dark') {
+                themeCheckbox.checked = true;
+            }
+        }
+
+        themeCheckbox.addEventListener('change', () => {
+            const newTheme = themeCheckbox.checked ? 'dark' : 'light';
+
+            root.setAttribute('data-theme', newTheme);
+            localStorage.setItem('theme', newTheme);
+        });
+    </script>
+    {% block scripts %}{% endblock %}
+</body>
+
+</html>{% extends 'base.html' %}
+
+{% block content %}
+<section class="hero">
+    <div class="hero-content">
+
+        <h1>Rhyma</h1>
+        <p class="tagline">Defining the New Sound of Luxury</p>
+        <a href="{{ url_for('music') }}" class="cta-button">Listen Now</a>
+    </div>
+</section>
+
+<section class="featured-preview">
+    <div class="container">
+        <h2>Latest Single</h2>
+        <div class="spotify-embed-container" style="display: flex; justify-content: center; margin-bottom: 2rem;">
+            {% if settings and settings.latest_release_id %}
+            <iframe style="border-radius:12px"
+                src="https://open.spotify.com/embed/album/{{ settings.latest_release_id }}?utm_source=generator&theme=0"
+                width="100%" height="352" frameBorder="0" allowfullscreen=""
+                allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture"
+                loading="lazy"></iframe>
+            {% else %}
+            <iframe style="border-radius:12px"
+                src="https://open.spotify.com/embed/track/2FJGPXuJs9809AdKZ7fGPj?utm_source=generator&theme=0"
+                width="100%" height="352" frameBorder="0" allowfullscreen=""
+                allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture"
+                loading="lazy"></iframe>
+            {% endif %}
+        </div>
+
+        <div class="album-section">
+            <div class="album-title-header">
+                <h3 id="album-title">Featured Projects</h3>
+            </div>
+            <div class="album-images-container">
+                <div class="album-item" style="width: 300px;">
+                    <iframe style="border-radius:12px"
+                        src="https://open.spotify.com/embed/album/11G7xf6VQHjhSSCtW6FRdt?utm_source=generator"
+                        width="100%" height="352" frameBorder="0" allowfullscreen=""
+                        allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture"
+                        loading="lazy"></iframe>
+                </div>
+                <div class="album-item" style="width: 300px;">
+                    <iframe style="border-radius:12px"
+                        src="https://open.spotify.com/embed/album/3YUXPunrRpyRj2zv3ufbEQ?utm_source=generator"
+                        width="100%" height="352" frameBorder="0" allowfullscreen=""
+                        allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture"
+                        loading="lazy"></iframe>
+                </div>
+            </div>
+        </div>
+
+        <div class="release-info">
+            <p>Out Now on All Platforms</p>
+            <a href="https://youtube.com/rhymangn" target="_blank" class="text-link">Stream on YouTube <i
+                    class="fa-brands fa-youtube"></i> &rarr;</a>
+        </div>
+    </div>
+
+    <!-- Modal for album management -->
+    <div id="album-modal" class="album-modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <h3>Album Management</h3>
+            <div class="modal-options">
+                <button class="modal-btn" data-action="add">1. Add new album title</button>
+                <button class="modal-btn" data-action="change">2. Change album title</button>
+                <button class="modal-btn" data-action="remove">3. Remove album title</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Change album title modal -->
+    <div id="change-album-modal" class="album-modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <h3>Change Album Title</h3>
+            <p>Select the album title you want to change it to:</p>
+            <select id="album-select">
+                <option value="">-- Select Album --</option>
+            </select>
+            <div class="modal-section">
+                <label for="change-image-input">Select Image:</label>
+                <input type="file" id="change-image-input" accept="image/*" multiple>
+                <div id="change-selected-images" class="selected-images-preview"></div>
+            </div>
+            <button id="confirm-change-btn" class="modal-btn">Confirm</button>
+        </div>
+    </div>
+
+    <!-- Add new album title modal -->
+    <div id="add-album-modal" class="album-modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <h3>Add New Album Title</h3>
+            <input type="text" id="new-album-input" placeholder="Enter new album title">
+            <div class="modal-section">
+                <label for="add-image-input">Select Images:</label>
+                <input type="file" id="add-image-input" accept="image/*" multiple>
+                <div id="add-selected-images" class="selected-images-preview"></div>
+            </div>
+            <button id="confirm-add-btn" class="modal-btn">Add Album</button>
+        </div>
+    </div>
+</section>
+
+
+
+{% endblock %}{% extends 'base.html' %}
+
+{% block title %}Music{% endblock %}
+
+{% block content %}
+<div class="container music-page">
+
+    <!-- 1. Top Performing -->
+    <section class="top-tracks">
+        <h2>Top Tracks</h2>
+        <div class="spotify-embed-container"
+            style="display: flex; flex-direction: column; gap: 1rem; align-items: center;">
+            <iframe style="border-radius:12px"
+                src="https://open.spotify.com/embed/track/3b3VmMwvuKGPDNcUdYmLBh?utm_source=generator&theme=0"
+                width="100%" height="152" frameBorder="0" allowfullscreen=""
+                allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture"
+                loading="lazy"></iframe>
+            <iframe style="border-radius:12px"
+                src="https://open.spotify.com/embed/track/0shpPfrxAqZgu2bpeKo86E?utm_source=generator&theme=0"
+                width="100%" height="152" frameBorder="0" allowfullscreen=""
+                allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture"
+                loading="lazy"></iframe>
+            <iframe style="border-radius:12px"
+                src="https://open.spotify.com/embed/track/58P64V8UDPqOOmlXJpYLfn?utm_source=generator&theme=0"
+                width="100%" height="152" frameBorder="0" allowfullscreen=""
+                allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture"
+                loading="lazy"></iframe>
+        </div>
+    </section>
+
+    <!-- 2. Latest Release -->
+    <section class="latest-release-highlight">
+        <h2>Latest EP</h2>
+        <div class="spotify-embed-container" style="display: flex; justify-content: center;">
+            <iframe style="border-radius:12px"
+                src="https://open.spotify.com/embed/album/4zdanK4qRRjCe0N4XXToBt?utm_source=generator" width="100%"
+                height="352" frameBorder="0" allowfullscreen=""
+                allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture"
+                loading="lazy"></iframe>
+        </div>
+    </section>
+
+    <!-- 3. Upcoming/Unreleased (Hype) -->
+    <section class="hype-section">
+        <h2>Upcoming Drop</h2>
+        <div class="countdown-container">
+            <p class="hype-text" style="font-size: 2rem; margin: 2rem 0;">Update Coming Soon</p>
+            <form action="mailto:newrelease@rhymamusic.co.za" method="post" enctype="text/plain" class="presave-form">
+                <input type="email" name="email" placeholder="Enter your email to join the waitlist" required
+                    style="padding: 1rem; border: none; min-width: 250px; color: var(--text-color); background-color: var(--bg-color);">
+                <button type="submit">Notify Me</button>
+            </form>
+        </div>
+    </section>
+
+</div>
+{% endblock %}
+
+{% block scripts %}
+{% endblock %}
