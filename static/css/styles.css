@@ -20,6 +20,45 @@
     --hero-overlay: rgba(0, 0, 0, 0.85);
 }
 
+/* Theme-Aware Image Utilities */
+.light-mode-only {
+    display: block;
+}
+
+.dark-mode-only {
+    display: none;
+}
+
+/* Switch visibility in Dark Mode */
+[data-theme="dark"] .light-mode-only {
+    display: none;
+}
+
+[data-theme="dark"] .dark-mode-only {
+    display: block;
+}
+
+/* Logo Sizing */
+.nav-logo-img {
+    height: 40px;
+    /* Adjust as needed for header */
+    width: auto;
+    object-fit: contain;
+}
+
+.hero-logo-img {
+    width: 300px;
+    /* Adjust responsive width */
+    max-width: 80%;
+    height: auto;
+    margin-bottom: 1rem;
+}
+
+/* Ensure images don't overflow */
+img {
+    max-width: 100%;
+}
+
 /* Custom Theme Toggle (Uiverse.io) */
 .theme-switch-wrapper {
     --toggle-size: 30px;

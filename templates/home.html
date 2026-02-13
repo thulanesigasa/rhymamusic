@@ -3,8 +3,11 @@
 {% block content %}
 <section class="hero">
     <div class="hero-content">
-
-        <h1>Rhyma</h1>
+        <!-- Theme Aware Hero Images -->
+        <img src="{{ url_for('static', filename='images/rhyma(black).png') }}" alt="Rhyma"
+            class="hero-logo-img light-mode-only">
+        <img src="{{ url_for('static', filename='images/rhyma(white).png') }}" alt="Rhyma"
+            class="hero-logo-img dark-mode-only">
         <p class="tagline">Defining the New Sound of Luxury</p>
         <a href="{{ url_for('music') }}" class="cta-button">Listen Now</a>
         <div class="social-icons" style="margin-top: 2rem;">

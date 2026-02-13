@@ -32,7 +32,12 @@
     <!-- Navbar -->
     <nav class="navbar">
         <div class="logo">
-            <a href="{{ url_for('home') }}">RHYMA</a>
+            <a href="{{ url_for('home') }}">
+                <img src="{{ url_for('static', filename='images/curved (black).png') }}" alt="Rhyma"
+                    class="nav-logo-img light-mode-only">
+                <img src="{{ url_for('static', filename='images/curved (white).png') }}" alt="Rhyma"
+                    class="nav-logo-img dark-mode-only">
+            </a>
         </div>
         <!-- From Uiverse.io by prakashdc -->
         <label class="hamburger" id="mobile-menu-label">
