@@ -206,11 +206,31 @@
             }
         }
 
-        themeCheckbox.addEventListener('change', () => {
-            const newTheme = themeCheckbox.checked ? 'dark' : 'light';
+        root.setAttribute('data-theme', newTheme);
+        localStorage.setItem('theme', newTheme);
+        });
 
-            root.setAttribute('data-theme', newTheme);
-            localStorage.setItem('theme', newTheme);
+        // Global Auto-Stop for Iframes (Music/Video)
+        document.addEventListener('DOMContentLoaded', () => {
+            let currentIframe = null;
+
+            // Poll for active element changes to detect iframe interaction
+            setInterval(() => {
+                const activeElement = document.activeElement;
+                if (activeElement && activeElement.tagName === 'IFRAME') {
+                    if (currentIframe && currentIframe !== activeElement) {
+                        // User switched to a new iframe
+                        // Check if the previous one was likely a music/video embed
+                        if (currentIframe.src.includes('spotify') || currentIframe.src.includes('youtube')) {
+                            // Reset the source to stop playback of the previous one
+                            console.log('Stopping previous player...');
+                            const src = currentIframe.src;
+                            currentIframe.src = src;
+                        }
+                    }
+                    currentIframe = activeElement;
+                }
+            }, 500);
         });
     </script>
     {% block scripts %}{% endblock %}
