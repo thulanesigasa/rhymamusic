@@ -206,8 +206,11 @@
             }
         }
 
-        root.setAttribute('data-theme', newTheme);
-        localStorage.setItem('theme', newTheme);
+        themeCheckbox.addEventListener('change', () => {
+            const newTheme = themeCheckbox.checked ? 'dark' : 'light';
+
+            root.setAttribute('data-theme', newTheme);
+            localStorage.setItem('theme', newTheme);
         });
 
         // Global Auto-Stop for Iframes (Music/Video)
