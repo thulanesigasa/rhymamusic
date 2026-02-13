@@ -54,8 +54,8 @@
     max-width: 80%;
     height: auto;
     margin-bottom: 1rem;
-    margin-left: 20px;
-    /* Shift to the right */
+    margin-left: 30px;
+    /* Shifted further right */
 }
 
 /* Ensure images don't overflow */
