@@ -60,4 +60,27 @@
 {% endblock %}
 
 {% block scripts %}
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+        let currentIframe = null;
+
+        // Poll for active element changes to detect iframe interaction
+        setInterval(() => {
+            const activeElement = document.activeElement;
+            if (activeElement && activeElement.tagName === 'IFRAME') {
+                if (currentIframe && currentIframe !== activeElement) {
+                    // User switched to a new iframe
+                    // Check if the previous one was likely a music embed (based on src)
+                    if (currentIframe.src.includes('spotify') || currentIframe.src.includes('youtube')) {
+                        // Reset the source to stop playback of the previous one
+                        console.log('Stopping previous player...');
+                        const src = currentIframe.src;
+                        currentIframe.src = src;
+                    }
+                }
+                currentIframe = activeElement;
+            }
+        }, 500); // Check every 500ms
+    });
+</script>
 {% endblock %}
