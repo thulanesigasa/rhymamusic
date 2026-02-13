@@ -41,17 +41,21 @@
 /* Logo Sizing */
 .nav-logo-img {
     height: 60px;
+    /* Increased from 40px */
     /* Adjust as needed for header */
     width: auto;
     object-fit: contain;
 }
 
 .hero-logo-img {
-    width: 500px;
+    width: 320px;
+    /* Slightly larger */
     /* Adjust responsive width */
     max-width: 80%;
     height: auto;
     margin-bottom: 1rem;
+    margin-left: 20px;
+    /* Shift to the right */
 }
 
 /* Ensure images don't overflow */
