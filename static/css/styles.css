@@ -40,9 +40,8 @@
 
 /* Logo Sizing */
 .nav-logo-img {
-    height: 78px;
-    /* Increased from 40px */
-    /* Adjust as needed for header */
+    height: 50px;
+    /* Decreased from 78px */
     width: auto;
     object-fit: contain;
 }
