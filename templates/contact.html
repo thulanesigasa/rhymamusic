@@ -7,7 +7,7 @@
     <h1>Get in Touch</h1>
     <p style="margin-bottom: 3rem; color: #666;">For general inquiries, press, and collaborations.</p>
 
-    <form action="mailto:enquiries@rhymamusic.co.za" method="POST" enctype="text/plain" style="text-align: left;">
+    <form id="contactForm" onsubmit="handleContactSubmit(event)" style="text-align: left;">
         <div class="form-group">
             <label for="name">Name</label>
             <input type="text" id="name" name="name" required>
@@ -26,9 +26,37 @@
         <button type="submit">Send Message</button>
     </form>
 
+    <script>
+        function handleContactSubmit(event) {
+            event.preventDefault();
+
+            const name = document.getElementById('name').value;
+            const email = document.getElementById('email').value;
+            const message = document.getElementById('message').value;
+
+            if (!name || !email || !message) {
+                // Browser default validation should catch this given 'required' attrs, 
+                // but as a fallback:
+                showCustomAlert('Missing Fields', 'Please fill in all fields.');
+                return;
+            }
+
+            const subject = `Inquiry from ${name}`;
+            const body = `Name: ${name}\nEmail: ${email}\n\nMessage:\n${message}`;
+
+            const mailtoLink = `mailto:enquiries@rhymamusic.co.za?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+
+            window.location.href = mailtoLink;
+
+            showCustomAlert('Thank You', 'We have received your message.');
+            document.getElementById('contactForm').reset();
+        }
+    </script>
+
     <div style="margin-top: 4rem;">
         <h3>Connect</h3>
         <div class="social-icons" style="justify-content: center; display: flex; gap: 1rem; margin-top: 1rem;">
+            <a href="https://x.com/rhymangn" target="_blank" title="X"><i class="fa-brands fa-x-twitter"></i></a>
             <a href="https://music.apple.com/us/artist/rhyma/1232075857" target="_blank" title="Apple Music"><i
                     class="fa-brands fa-apple"></i></a>
             <a href="https://www.tiktok.com/@rhymangn" target="_blank" title="TikTok"><i

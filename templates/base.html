@@ -237,6 +237,33 @@
         });
     </script>
     {% block scripts %}{% endblock %}
+    <!-- Custom Alert Modal -->
+    <div id="custom-alert"
+        style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.7); z-index: 1000; justify-content: center; align-items: center;">
+        <div
+            style="background: var(--bg-color); border: 1px solid var(--text-color); padding: 2rem; border-radius: 12px; max-width: 90%; width: 400px; text-align: center; box-shadow: 0 4px 15px rgba(0,0,0,0.3);">
+            <i class="fa-regular fa-envelope"
+                style="font-size: 3rem; color: var(--accent-color); margin-bottom: 1rem;"></i>
+            <h3 id="alert-title" style="margin-bottom: 0.5rem; text-transform: uppercase;">Notification</h3>
+            <p id="alert-message" style="margin-bottom: 1.5rem; opacity: 0.8; font-size: 1.1rem;"></p>
+            <button onclick="closeCustomAlert()" class="buy-btn" style="width: 100%;">OK</button>
+        </div>
+    </div>
+
+    <script>
+        function showCustomAlert(title, message) {
+            document.getElementById('alert-title').innerText = title;
+            document.getElementById('alert-message').innerText = message;
+            document.getElementById('custom-alert').style.display = 'flex';
+        }
+
+        function closeCustomAlert() {
+            document.getElementById('custom-alert').style.display = 'none';
+        }
+
+        // Override default alert for consistent look if needed, or use explicitly
+        // window.alert = function(msg) { showCustomAlert('Alert', msg); }
+    </script>
 </body>
 
 </html>

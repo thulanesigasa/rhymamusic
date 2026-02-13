@@ -1,0 +1,8 @@
+__pycache__
+instance
+.git
+.gitignore
+README.md
+venv
+mobile
+.DS_Store

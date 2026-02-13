@@ -7,7 +7,7 @@
     <h1 style="text-align: center; margin-bottom: 3rem;">Bookings & Inquiries</h1>
     <p style="margin-bottom: 3rem; color: #666;">For bookings, appearances, and features.</p>
 
-    <form action="mailto:bookings@rhymamusic.co.za" method="POST" enctype="text/plain" class="booking-form">
+    <form id="bookingForm" onsubmit="handleBookingSubmit(event)" class="booking-form">
         <div class="form-group">
             <label for="contact_person">Contact Person / Promoter</label>
             <input type="text" id="contact_person" name="contact_person" required>
@@ -35,5 +35,32 @@
 
         <button type="submit">Submit Inquiry</button>
     </form>
+
+    <script>
+        function handleBookingSubmit(event) {
+            event.preventDefault();
+
+            const contactPerson = document.getElementById('contact_person').value;
+            const eventDate = document.getElementById('event_date').value;
+            const venueName = document.getElementById('venue_name').value;
+            const budget = document.getElementById('budget').value;
+            const details = document.getElementById('details').value;
+
+            if (!contactPerson || !eventDate || !venueName || !budget) {
+                showCustomAlert('Missing Fields', 'Please fill in all required fields.');
+                return;
+            }
+
+            const subject = `Booking Inquiry: ${eventDate} @ ${venueName}`;
+            const body = `Contact Person: ${contactPerson}\nEvent Date: ${eventDate}\nVenue: ${venueName}\nBudget: R${budget}\n\nDetails:\n${details}`;
+
+            const mailtoLink = `mailto:bookings@rhymamusic.co.za?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+
+            window.location.href = mailtoLink;
+
+            showCustomAlert('Thank You', 'We have received your booking inquiry.');
+            document.getElementById('bookingForm').reset();
+        }
+    </script>
 </section>
 {% endblock %}

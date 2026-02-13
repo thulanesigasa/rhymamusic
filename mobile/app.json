@@ -1,0 +1,30 @@
+{
+  "expo": {
+    "name": "Rhyma",
+    "slug": "rhyma-mobile",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "icon": "./assets/images/rhyma_logo.jpeg",
+    "userInterfaceStyle": "light",
+    "newArchEnabled": true,
+    "splash": {
+      "image": "./assets/images/rhyma_logo.jpeg",
+      "resizeMode": "contain",
+      "backgroundColor": "#ffffff"
+    },
+    "ios": {
+      "supportsTablet": true,
+      "bundleIdentifier": "com.rhymamusic.mobile"
+    },
+    "android": {
+      "package": "com.rhymamusic.mobile",
+      "adaptiveIcon": {
+        "foregroundImage": "./assets/images/rhyma_logo.jpeg",
+        "backgroundColor": "#ffffff"
+      }
+    },
+    "web": {
+      "favicon": "./assets/images/rhyma_logo.jpeg"
+    }
+  }
+}
