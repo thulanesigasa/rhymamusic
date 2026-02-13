@@ -40,7 +40,7 @@
 
 /* Logo Sizing */
 .nav-logo-img {
-    height: 60px;
+    height: 78px;
     /* Increased from 40px */
     /* Adjust as needed for header */
     width: auto;
@@ -54,7 +54,7 @@
     max-width: 80%;
     height: auto;
     margin-bottom: 1rem;
-    margin-left: 33px;
+    margin-left: 39.8px;
     /* Shifted right again (total 33px) */
 }
 
