@@ -23,5 +23,8 @@
     "react-native-webview": "^13.16.0",
     "react-native-youtube-iframe": "^2.4.1"
   },
-  "private": true
+  "private": true,
+  "devDependencies": {
+    "eas-cli": "^18.0.1"
+  }
 }

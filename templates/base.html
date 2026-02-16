@@ -4,11 +4,34 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="Official website of Rhyma. Latest music, videos and booking.">
-    <link rel="icon" type="image/jpeg" href="{{ url_for('static', filename='images/rhyma_icon.jpeg') }}">
-    <link rel="apple-touch-icon" href="{{ url_for('static', filename='images/rhyma_icon.jpeg') }}">
+    <meta name="description"
+        content="Official website of Rhyma. Defining the New Sound of Luxury. Latest music, videos, and tour dates.">
+    <meta name="keywords" content="Rhyma, Musician, Artist, Luxury Sound, New Music">
+    <meta name="author" content="Rhyma">
+
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://rhymamusic.co.za/">
+    <meta property="og:title" content="Official Website of Rhyma">
+    <meta property="og:description"
+        content="Official website of Rhyma. Defining the New Sound of Luxury. Latest music, videos, and tour dates.">
+    <meta property="og:image" content="{{ url_for('static', filename='images/rhyma(black).png', _external=True) }}">
+
+    <!-- Twitter -->
+    <meta property="twitter:card" content="summary_large_image">
+    <meta property="twitter:url" content="https://rhymamusic.co.za/">
+    <meta property="twitter:title" content="Official Website of Rhyma">
+    <meta property="twitter:description"
+        content="Official website of Rhyma. Defining the New Sound of Luxury. Latest music, videos, and tour dates.">
+    <meta property="twitter:image"
+        content="{{ url_for('static', filename='images/rhyma(black).png', _external=True) }}">
+
+    <title>{% block title %}Official Website of Rhyma{% endblock %}</title>
+
+    <!-- Favicon -->
+    <link rel="icon" type="image/png" href="{{ url_for('static', filename='images/rhyma(black).png') }}">
+    <link rel="apple-touch-icon" href="{{ url_for('static', filename='images/rhyma(black).png') }}">
     <link rel="manifest" href="{{ url_for('static', filename='manifest.json') }}">
-    <title>{% block title %}Rhyma{% endblock %} | Official Website</title>
 
     <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">

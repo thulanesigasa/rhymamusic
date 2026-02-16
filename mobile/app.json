@@ -25,6 +25,11 @@
     },
     "web": {
       "favicon": "./assets/images/rhyma_logo.jpeg"
+    },
+    "extra": {
+      "eas": {
+        "projectId": "fcf09b39-a1a5-42e3-8b42-0097763156b8"
+      }
     }
   }
 }
