@@ -164,6 +164,94 @@ def delete_merch(id):
     db.session.commit()
     return redirect(url_for('admin'))
 
+# --- Spotify Integration ---
+import spotipy
+from spotipy.oauth2 import SpotifyClientCredentials
+from flask import jsonify
+
+class Settings(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    artist_id = db.Column(db.String(100), nullable=True)
+
+def sync_spotify_music():
+    try:
+        settings = Settings.query.first()
+        # Use env var as default fallback if DB is empty
+        artist_id = settings.artist_id if (settings and settings.artist_id) else os.environ.get('SPOTIFY_ARTIST_ID')
+        
+        if not artist_id:
+            return False, "Artist ID not configured in Settings or Env (SPOTIFY_ARTIST_ID)."
+
+        auth_manager = SpotifyClientCredentials() 
+        sp = spotipy.Spotify(auth_manager=auth_manager)
+
+        # Sync Tracks (simplified: just fetching top tracks for now)
+        top_tracks = sp.artist_top_tracks(artist_id)
+        
+        added_count = 0
+        for track_data in top_tracks['tracks']:
+            # Check if track exists by title
+            title = track_data['name']
+            existing = Track.query.filter_by(title=title).first()
+            if not existing:
+                # Use preview_url if available, else maybe external_urls['spotify']
+                audio = track_data.get('preview_url') or track_data['external_urls']['spotify']
+                new_track = Track(title=title, audio_url=audio, is_new_release=False)
+                db.session.add(new_track)
+                added_count += 1
+        
+        db.session.commit()
+        return True, f"Synced {added_count} new tracks."
+
+    except Exception as e:
+        return False, str(e)
+
+@app.route('/admin/sync-spotify', methods=['POST'])
+@login_required
+def sync_spotify_route():
+    success, msg = sync_spotify_music()
+    print(f"Spotify Sync: {success} - {msg}") # Logs to console
+    return redirect(url_for('admin'))
+
+@app.route('/admin/settings', methods=['POST'])
+@login_required
+def update_settings():
+    aid = request.form.get('artist_id')
+    settings = Settings.query.first()
+    if not settings:
+        settings = Settings(artist_id=aid)
+        db.session.add(settings)
+    else:
+        settings.artist_id = aid
+    db.session.commit()
+    return redirect(url_for('admin'))
+
+# --- API Endpoints for Mobile App ---
+@app.route('/api/products', methods=['GET'])
+def get_products():
+    products = Product.query.all()
+    data = [{'id': p.id, 'name': p.name, 'price': p.price, 'image_url': p.image_url} for p in products]
+    return jsonify(data)
+
+@app.route('/api/tracks', methods=['GET'])
+def get_tracks():
+    tracks = Track.query.all()
+    data = [{'id': t.id, 'title': t.title, 'audio_url': t.audio_url, 'is_new_release': t.is_new_release} for t in tracks]
+    return jsonify(data)
+
+@app.route('/api/cron/sync', methods=['GET'])
+def cron_sync():
+    # Check for authentication (Vercel Cron Secret)
+    cron_secret = os.environ.get('CRON_SECRET')
+    if cron_secret:
+        auth_header = request.headers.get('Authorization')
+        # Vercel sends: Authorization: Bearer <CRON_SECRET>
+        if not auth_header or auth_header != f"Bearer {cron_secret}":
+             return jsonify({'error': 'Unauthorized'}), 401
+    
+    success, msg = sync_spotify_music()
+    return jsonify({'success': success, 'message': msg})
+
 
 # Run this once in python console to create: db.create_all()
 

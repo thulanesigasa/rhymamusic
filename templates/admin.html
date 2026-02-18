@@ -19,33 +19,51 @@
                 </div>
                 <button type="submit" class="bronze-btn">Save Track</button>
             </form>
+
+            <hr style="border-color: rgba(255,255,255,0.1); margin: 2rem 0;">
+
+            <h3>Spotify Integration</h3>
+            <form action="/admin/sync-spotify" method="POST" class="admin-form"
+                style="display: inline-block; margin-right: 1rem;">
+                <button type="submit" class="bronze-btn" style="background: #1DB954; color: white;">Sync Latest Releases
+                    from Spotify</button>
+            </form>
+
+            <form action="/admin/settings" method="POST" class="admin-form" style="margin-top: 1rem;">
+                <label for="artist_id" style="display: block; margin-bottom: 0.5rem;">Spotify Artist ID (Optional
+                    overrides env):</label>
+                <div class="form-row">
+                    <input type="text" name="artist_id" placeholder="Enter Artist ID" style="flex: 1;">
+                    <button type="submit" class="bronze-btn" style="width: auto;">Save ID</button>
+                </div>
+            </form>
         </section>
 
         <section id="merch" class="admin-section glass-card">
-    <h2>Add New Merch</h2>
-    <form action="/admin/add-merch" method="POST" enctype="multipart/form-data" class="admin-form">
-        <div class="form-row">
-            <input type="text" name="name" placeholder="Item Name" required>
-            <input type="number" name="price" placeholder="Price" step="0.01" required>
-        </div>
-        
-        <div class="file-input-wrapper">
-            <label for="merch-img">Product Image:</label>
-            <input type="file" id="merch-img" name="image" accept="image/*" required>
-        </div>
-        
-        <button type="submit" class="bronze-btn">Upload & Save Product</button>
-    </form>
-</section>
+            <h2>Add New Merch</h2>
+            <form action="/admin/add-merch" method="POST" enctype="multipart/form-data" class="admin-form">
+                <div class="form-row">
+                    <input type="text" name="name" placeholder="Item Name" required>
+                    <input type="number" name="price" placeholder="Price" step="0.01" required>
+                </div>
 
-<div class="current-list">
-    <h3>Current Merch</h3>
-    {% for product in products %}
-    <div class="admin-item">
-        <span>{{ product.name }} - ${{ product.price }}</span>
-        <form action="{{ url_for('delete_merch', id=product.id) }}" method="POST">
-            <button type="submit" class="delete-icon">×</button>
-        </form>
-    </div>
-    {% endfor %}
-</div>
+                <div class="file-input-wrapper">
+                    <label for="merch-img">Product Image:</label>
+                    <input type="file" id="merch-img" name="image" accept="image/*" required>
+                </div>
+
+                <button type="submit" class="bronze-btn">Upload & Save Product</button>
+            </form>
+        </section>
+
+        <div class="current-list">
+            <h3>Current Merch</h3>
+            {% for product in products %}
+            <div class="admin-item">
+                <span>{{ product.name }} - ${{ product.price }}</span>
+                <form action="{{ url_for('delete_merch', id=product.id) }}" method="POST">
+                    <button type="submit" class="delete-icon">×</button>
+                </form>
+            </div>
+            {% endfor %}
+        </div>
