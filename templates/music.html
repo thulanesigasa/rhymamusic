@@ -46,12 +46,16 @@
     <!-- 3. Upcoming/Unreleased (Hype) -->
     <section class="hype-section">
         <h2>Upcoming Drop</h2>
-        <div class="countdown-container">
-            <p class="hype-text" style="font-size: 2rem; margin: 2rem 0;">Update Coming Soon</p>
+        <div class="countdown-container" style="text-align: center;">
+            <p class="hype-text" id="drop-announcement" style="font-size: 1.5rem; margin: 1rem 0;">Next Single Drops In:</p>
+            <div id="countdown-timer" style="display: flex; justify-content: center; gap: 1rem; font-size: 2rem; font-weight: bold; margin-bottom: 2rem;">
+                <!-- Timer will be injected here -->
+            </div>
+            
             <form action="mailto:newrelease@rhymamusic.co.za" method="post" enctype="text/plain" class="presave-form">
                 <input type="email" name="email" placeholder="Enter your email to join the waitlist" required
-                    style="padding: 1rem; border: none; min-width: 250px; color: var(--text-color); background-color: var(--bg-color);">
-                <button type="submit">Notify Me</button>
+                    style="padding: 1rem; border: none; min-width: 250px; color: var(--text-color); background-color: var(--bg-color); border-radius: 8px;">
+                <button type="submit" style="padding: 1rem 2rem; border: none; background: var(--accent-color); color: #fff; border-radius: 8px; cursor: pointer; font-weight: bold;">Notify Me</button>
             </form>
         </div>
     </section>
@@ -60,4 +64,60 @@
 {% endblock %}
 
 {% block scripts %}
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Array of upcoming drop dates (March 6th, 13th, 20th, 27th, 2026)
+    const dropDates = [
+        new Date("2026-03-06T00:00:00+02:00").getTime(),
+        new Date("2026-03-13T00:00:00+02:00").getTime(),
+        new Date("2026-03-20T00:00:00+02:00").getTime(),
+        new Date("2026-03-27T00:00:00+02:00").getTime()
+    ];
+
+    const timerElement = document.getElementById("countdown-timer");
+    const announcementElement = document.getElementById("drop-announcement");
+
+    function updateTimer() {
+        const now = new Date().getTime();
+        
+        // Find the next upcoming drop date
+        let nextDrop = dropDates.find(date => date > now);
+
+        if (!nextDrop) {
+            timerElement.innerHTML = "<div>All March singles have dropped!</div>";
+            announcementElement.innerText = "The Drops Are Complete";
+            return;
+        }
+
+        const distance = nextDrop - now;
+
+        const days = Math.floor(distance / (1000 * 60 * 60 * 24));
+        const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+        const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+        const seconds = Math.floor((distance % (1000 * 60)) / 1000);
+
+        timerElement.innerHTML = `
+            <div style="display: flex; flex-direction: column; align-items: center;">
+                <span>${days}</span><span style="font-size: 0.8rem; font-weight: normal;">Days</span>
+            </div>
+            <span>:</span>
+            <div style="display: flex; flex-direction: column; align-items: center;">
+                <span>${hours.toString().padStart(2, '0')}</span><span style="font-size: 0.8rem; font-weight: normal;">Hours</span>
+            </div>
+            <span>:</span>
+            <div style="display: flex; flex-direction: column; align-items: center;">
+                <span>${minutes.toString().padStart(2, '0')}</span><span style="font-size: 0.8rem; font-weight: normal;">Minutes</span>
+            </div>
+            <span>:</span>
+            <div style="display: flex; flex-direction: column; align-items: center;">
+                <span>${seconds.toString().padStart(2, '0')}</span><span style="font-size: 0.8rem; font-weight: normal;">Seconds</span>
+            </div>
+        `;
+    }
+
+    // Update timer immediately, then every second
+    updateTimer();
+    setInterval(updateTimer, 1000);
+});
+</script>
 {% endblock %}

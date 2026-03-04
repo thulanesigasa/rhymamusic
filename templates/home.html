@@ -29,6 +29,18 @@
 
 <section class="featured-preview">
     <div class="container">
+        {% if latest_single %}
+        <h2>Latest Single</h2>
+        <div class="video-container" style="display: flex; justify-content: center; margin-bottom: 2rem;">
+            <!-- Convert standard spotify URL to embed URL if needed -->
+            <iframe style="border-radius:12px"
+                src="{{ latest_single.audio_url | replace('https://open.spotify.com/album/', 'https://open.spotify.com/embed/album/') | replace('https://open.spotify.com/track/', 'https://open.spotify.com/embed/track/') }}?utm_source=generator"
+                width="100%" height="152" frameBorder="0" allowfullscreen=""
+                allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" loading="lazy">
+            </iframe>
+        </div>
+        {% endif %}
+
         <h2>New Release Video</h2>
         <div class="video-container" style="display: flex; justify-content: center; margin-bottom: 2rem;">
             <iframe width="100%" height="352" src="https://www.youtube.com/embed/prZ-ErkCkNw" title="Come Alive"

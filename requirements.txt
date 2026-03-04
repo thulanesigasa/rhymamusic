@@ -3,3 +3,4 @@ flask-sqlalchemy
 flask-login
 psycopg2-binary
 spotipy
+spotipy==2.23.0

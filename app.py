@@ -70,7 +70,8 @@ class Announcement(db.Model):
 # Routes
 @app.route('/')
 def home():
-    return render_template('home.html', title="Home")
+    latest_single = Track.query.filter_by(is_new_release=True).first()
+    return render_template('home.html', title="Home", latest_single=latest_single)
 
 @app.route('/music')
 def music():
@@ -185,23 +186,33 @@ def sync_spotify_music():
         auth_manager = SpotifyClientCredentials() 
         sp = spotipy.Spotify(auth_manager=auth_manager)
 
-        # Sync Tracks (simplified: just fetching top tracks for now)
-        top_tracks = sp.artist_top_tracks(artist_id)
-        
+        # Clear existing new release flags
+        for t in Track.query.filter_by(is_new_release=True).all():
+            t.is_new_release = False
+        db.session.commit()
+
+        # Fetch latest single
+        albums = sp.artist_albums(artist_id, album_type='single', limit=1)
         added_count = 0
-        for track_data in top_tracks['tracks']:
-            # Check if track exists by title
-            title = track_data['name']
-            existing = Track.query.filter_by(title=title).first()
-            if not existing:
-                # Use preview_url if available, else maybe external_urls['spotify']
-                audio = track_data.get('preview_url') or track_data['external_urls']['spotify']
-                new_track = Track(title=title, audio_url=audio, is_new_release=False)
+
+        if albums['items']:
+            latest_album = albums['items'][0]
+            # Since an album might be a single, we are picking the first single "album"
+            track_title = latest_album['name']
+            audio_url = latest_album['external_urls']['spotify']
+
+            # Check if this single is already in our DB
+            existing = Track.query.filter_by(title=track_title).first()
+            if existing:
+                existing.is_new_release = True
+                existing.audio_url = audio_url # update url just in case
+            else:
+                new_track = Track(title=track_title, audio_url=audio_url, is_new_release=True)
                 db.session.add(new_track)
                 added_count += 1
-        
+            
         db.session.commit()
-        return True, f"Synced {added_count} new tracks."
+        return True, f"Synced latest single and {added_count} new tracks."
 
     except Exception as e:
         return False, str(e)
