@@ -13,7 +13,7 @@ app.config['SECRET_KEY'] = os.environ.get('SECRET_KEY', 'your_secret_bronze_key'
 
 # Database Configuration
 # Database Configuration
-uri = os.environ.get('DATABASE_URL')
+uri = os.environ.get('DATABASE_URL') or os.environ.get('POSTGRES_URL')
 if uri:
     if uri.startswith("postgres://"):
         uri = uri.replace("postgres://", "postgresql://", 1)
