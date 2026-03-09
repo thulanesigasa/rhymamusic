@@ -12,9 +12,18 @@ app = Flask(__name__)
 app.config['SECRET_KEY'] = os.environ.get('SECRET_KEY', 'your_secret_bronze_key')
 
 # Database Configuration
-uri = os.environ.get('DATABASE_URL', 'sqlite:///site.db')
-if uri.startswith("postgres://"):
-    uri = uri.replace("postgres://", "postgresql://", 1)
+# Database Configuration
+uri = os.environ.get('DATABASE_URL')
+if uri:
+    if uri.startswith("postgres://"):
+        uri = uri.replace("postgres://", "postgresql://", 1)
+else:
+    # On Vercel, the root is read-only. We move the SQLite DB to /tmp/ if no DB is provided.
+    if os.environ.get('VERCEL'):
+        uri = 'sqlite:////tmp/site.db'
+    else:
+        uri = 'sqlite:///site.db'
+
 app.config['SQLALCHEMY_DATABASE_URI'] = uri
 
 # Configure where to save images
@@ -273,8 +282,11 @@ def cron_sync():
 # Run this once in python console to create: db.create_all()
 
 # Database initialization for Vercel/Production
-with app.app_context():
-    db.create_all()
+try:
+    with app.app_context():
+        db.create_all()
+except Exception as e:
+    print(f"Database initialization skipped or failed: {e}")
 
 if __name__ == '__main__':
     app.run(debug=True, host='0.0.0.0', port=5000)
