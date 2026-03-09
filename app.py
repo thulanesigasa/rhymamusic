@@ -272,7 +272,9 @@ def cron_sync():
 
 # Run this once in python console to create: db.create_all()
 
+# Database initialization for Vercel/Production
+with app.app_context():
+    db.create_all()
+
 if __name__ == '__main__':
-    with app.app_context():
-        db.create_all() # Ensure tables are created for dev
     app.run(debug=True, host='0.0.0.0', port=5000)
