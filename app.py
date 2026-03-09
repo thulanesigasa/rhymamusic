@@ -191,15 +191,19 @@ def sync_spotify_music():
             t.is_new_release = False
         db.session.commit()
 
-        # Fetch latest single
-        albums = sp.artist_albums(artist_id, album_type='single', limit=1)
+        # Fetch latest releases (Singles & Albums/EPs)
+        # We fetch more than 1 to ensure we can sort them by release_date properly
+        results = sp.artist_albums(artist_id, album_type='single,album', limit=5)
         added_count = 0
 
-        if albums['items']:
-            latest_album = albums['items'][0]
-            # Since an album might be a single, we are picking the first single "album"
+        if results['items']:
+            # Sort by release_date descending (newest first)
+            sorted_albums = sorted(results['items'], key=lambda x: x['release_date'], reverse=True)
+            latest_album = sorted_albums[0]
+            
             track_title = latest_album['name']
             audio_url = latest_album['external_urls']['spotify']
+            release_date = latest_album['release_date']
 
             # Check if this single is already in our DB
             existing = Track.query.filter_by(title=track_title).first()
@@ -211,8 +215,10 @@ def sync_spotify_music():
                 db.session.add(new_track)
                 added_count += 1
             
-        db.session.commit()
-        return True, f"Synced latest single and {added_count} new tracks."
+            db.session.commit()
+            return True, f"Found Latest: '{track_title}' ({release_date}). Synced {added_count} new track(s)."
+        
+        return False, "No releases found for this Artist ID on Spotify."
 
     except Exception as e:
         return False, str(e)
