@@ -182,54 +182,44 @@ from flask import jsonify
 class Settings(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     artist_id = db.Column(db.String(100), nullable=True)
-    latest_release_id = db.Column(db.String(100), nullable=True)
+    
 
 def sync_spotify_music():
     try:
         settings = Settings.query.first()
         # Use env var as default fallback if DB is empty
         artist_id = settings.artist_id if (settings and settings.artist_id) else os.environ.get('SPOTIFY_ARTIST_ID')
-        
         if not artist_id:
             return False, "Artist ID not configured in Settings or Env (SPOTIFY_ARTIST_ID)."
-
-        auth_manager = SpotifyClientCredentials() 
+        auth_manager = SpotifyClientCredentials()
         sp = spotipy.Spotify(auth_manager=auth_manager)
-
         # Clear existing new release flags
         for t in Track.query.filter_by(is_new_release=True).all():
             t.is_new_release = False
         db.session.commit()
-
         # Fetch latest releases (Singles & Albums/EPs)
         # We fetch more than 1 to ensure we can sort them by release_date properly
-        results = sp.artist_albums(artist_id, album_type='single,album', limit=10)
+        results = sp.artist_albums(artist_id, album_type='single,album', limit=5)
         added_count = 0
-
         if results['items']:
             # Sort by release_date descending (newest first)
             sorted_albums = sorted(results['items'], key=lambda x: x['release_date'], reverse=True)
             latest_album = sorted_albums[0]
-            
             track_title = latest_album['name']
             audio_url = latest_album['external_urls']['spotify']
             release_date = latest_album['release_date']
-
             # Check if this single is already in our DB
             existing = Track.query.filter_by(title=track_title).first()
             if existing:
                 existing.is_new_release = True
-                existing.audio_url = audio_url # update url just in case
+                existing.audio_url = audio_url  # update url just in case
             else:
                 new_track = Track(title=track_title, audio_url=audio_url, is_new_release=True)
                 db.session.add(new_track)
                 added_count += 1
-            
             db.session.commit()
             return True, f"Found Latest: '{track_title}' ({release_date}). Synced {added_count} new track(s)."
-        
         return False, "No releases found for this Artist ID on Spotify."
-
     except Exception as e:
         return False, str(e)
 
