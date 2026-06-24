@@ -613,13 +613,17 @@ footer {
 
 .album-images-container {
     display: flex;
-    justify-content: center;
-    gap: 3rem;
-    flex-wrap: wrap;
+    justify-content: flex-start;
+    gap: 2rem;
+    flex-wrap: nowrap;
     margin-bottom: 2rem;
+    overflow-x: auto;
+    width: 100%;
 }
 
 .album-item {
+    flex-shrink: 0;
+    width: 300px;
     display: flex;
     flex-direction: column;
     align-items: center;
