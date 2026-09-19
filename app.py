@@ -5,6 +5,9 @@ from werkzeug.security import generate_password_hash, check_password_hash
 from werkzeug.utils import secure_filename
 from datetime import datetime
 import os
+import urllib.request
+import xml.etree.ElementTree as ET
+import re
 
 app = Flask(__name__)
 # app.config['SECRET_KEY'] = 'your_secret_key' # Optional if no sessions used
@@ -88,17 +91,26 @@ def home():
     latest_video = None
     try:
         settings = Settings.query.first()
-        if not settings or not settings.latest_youtube_id:
+        if should_sync_youtube(settings):
             sync_youtube_video()
             settings = Settings.query.first()
 
         if settings and settings.latest_youtube_id:
             latest_video = {
                 'youtube_id': settings.latest_youtube_id,
-                'title': settings.latest_youtube_title or 'New Release Video'
+                'title': settings.latest_youtube_title or 'Rhyma - 24/7 (Visualizer)'
+            }
+        else:
+            latest_video = {
+                'youtube_id': 'puw1cc7-2ZY',
+                'title': 'Rhyma - 24/7 (Visualizer)'
             }
     except Exception as e:
         print(f"Error fetching YouTube settings: {e}")
+        latest_video = {
+            'youtube_id': 'puw1cc7-2ZY',
+            'title': 'Rhyma - 24/7 (Visualizer)'
+        }
 
     return render_template('home.html', title="Home", latest_single=latest_single, latest_video=latest_video)
 
@@ -247,17 +259,25 @@ class Settings(db.Model):
     youtube_channel_id = db.Column(db.String(100), nullable=True)
     latest_youtube_id = db.Column(db.String(100), nullable=True)
     latest_youtube_title = db.Column(db.String(200), nullable=True)
+    last_youtube_sync = db.Column(db.DateTime, nullable=True)
 
-import urllib.request
-import xml.etree.ElementTree as ET
-import re
+DEFAULT_YOUTUBE_CHANNEL_ID = "UCDew3CMxwN0A7VRLHOwXLBw"
+
+def should_sync_youtube(settings):
+    if not settings or not settings.latest_youtube_id or not settings.last_youtube_sync:
+        return True
+    try:
+        time_diff = (datetime.utcnow() - settings.last_youtube_sync).total_seconds()
+        return time_diff > 900 # Re-check YouTube RSS feed every 15 minutes
+    except Exception:
+        return True
 
 def get_channel_id_from_handle(handle="rhymangn"):
     clean_handle = handle if handle.startswith('@') else '@' + handle
     url = f"https://www.youtube.com/{clean_handle}"
-    req = urllib.request.Request(url, headers={'User-Agent': 'Mozilla/5.0'})
+    req = urllib.request.Request(url, headers={'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64)'})
     try:
-        with urllib.request.urlopen(req) as response:
+        with urllib.request.urlopen(req, timeout=5) as response:
             html = response.read().decode('utf-8')
             match = re.search(r'youtube\.com/channel/(UC[\w-]+)', html)
             if match:
@@ -270,7 +290,7 @@ def get_channel_id_from_handle(handle="rhymangn"):
                 return match.group(1)
     except Exception as e:
         print(f"Error fetching channel page: {e}")
-    return None
+    return DEFAULT_YOUTUBE_CHANNEL_ID
 
 def sync_youtube_video():
     try:
@@ -278,21 +298,26 @@ def sync_youtube_video():
         if not settings:
             settings = Settings()
             db.session.add(settings)
-            db.session.commit()
+            try:
+                db.session.commit()
+            except Exception:
+                db.session.rollback()
 
         channel_id = settings.youtube_channel_id or os.environ.get('YOUTUBE_CHANNEL_ID')
         if not channel_id:
-            channel_id = get_channel_id_from_handle("rhymangn")
-            if channel_id:
-                settings.youtube_channel_id = channel_id
+            channel_id = get_channel_id_from_handle("rhymangn") or DEFAULT_YOUTUBE_CHANNEL_ID
+            settings.youtube_channel_id = channel_id
+            try:
                 db.session.commit()
+            except Exception:
+                db.session.rollback()
 
         if not channel_id:
-            return False, "Could not find YouTube Channel ID."
+            channel_id = DEFAULT_YOUTUBE_CHANNEL_ID
 
         rss_url = f"https://www.youtube.com/feeds/videos.xml?channel_id={channel_id}"
-        req = urllib.request.Request(rss_url, headers={'User-Agent': 'Mozilla/5.0'})
-        with urllib.request.urlopen(req) as response:
+        req = urllib.request.Request(rss_url, headers={'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64)'})
+        with urllib.request.urlopen(req, timeout=6) as response:
             xml_data = response.read()
             root = ET.fromstring(xml_data)
             ns = {
@@ -309,11 +334,21 @@ def sync_youtube_video():
                 if video_id:
                     settings.latest_youtube_id = video_id
                     settings.latest_youtube_title = title
-                    db.session.commit()
+                    settings.last_youtube_sync = datetime.utcnow()
+                    try:
+                        db.session.commit()
+                    except Exception:
+                        db.session.rollback()
                     return True, f"Synced YouTube Video: '{title}' ({video_id})"
         return False, "No video entries found in YouTube RSS feed."
     except Exception as e:
+        print(f"YouTube sync error: {e}")
+        try:
+            db.session.rollback()
+        except Exception:
+            pass
         return False, str(e)
+
 
 
 def sync_spotify_music():
@@ -407,17 +442,30 @@ def get_tracks():
     data = [{'id': t.id, 'title': t.title, 'audio_url': t.audio_url, 'is_new_release': t.is_new_release} for t in tracks]
     return jsonify(data)
 
+from sqlalchemy import inspect, text
+
 @app.route('/api/latest-video', methods=['GET'])
 def get_latest_video():
-    settings = Settings.query.first()
-    if not settings or not settings.latest_youtube_id:
-        sync_youtube_video()
+    try:
         settings = Settings.query.first()
-    return jsonify({
-        'youtube_id': settings.latest_youtube_id if settings else 'prZ-ErkCkNw',
-        'title': settings.latest_youtube_title if settings else 'New Release Video',
-        'embed_url': f"https://www.youtube.com/embed/{settings.latest_youtube_id if settings and settings.latest_youtube_id else 'prZ-ErkCkNw'}"
-    })
+        if should_sync_youtube(settings):
+            sync_youtube_video()
+            settings = Settings.query.first()
+
+        youtube_id = (settings.latest_youtube_id if (settings and settings.latest_youtube_id) else 'puw1cc7-2ZY')
+        title = (settings.latest_youtube_title if (settings and settings.latest_youtube_title) else 'Rhyma - 24/7 (Visualizer)')
+        return jsonify({
+            'youtube_id': youtube_id,
+            'title': title,
+            'embed_url': f"https://www.youtube.com/embed/{youtube_id}"
+        })
+    except Exception as e:
+        print(f"Error in get_latest_video endpoint: {e}")
+        return jsonify({
+            'youtube_id': 'puw1cc7-2ZY',
+            'title': 'Rhyma - 24/7 (Visualizer)',
+            'embed_url': 'https://www.youtube.com/embed/puw1cc7-2ZY'
+        })
 
 @app.route('/api/gallery', methods=['GET'])
 def get_gallery():
@@ -433,8 +481,18 @@ def cron_sync():
         if not auth_header or auth_header != f"Bearer {cron_secret}":
              return jsonify({'error': 'Unauthorized'}), 401
     
-    spotify_success, spotify_msg = sync_spotify_music()
-    youtube_success, youtube_msg = sync_youtube_video()
+    spotify_success, spotify_msg = False, "Skipped"
+    try:
+        spotify_success, spotify_msg = sync_spotify_music()
+    except Exception as e:
+        spotify_msg = str(e)
+
+    youtube_success, youtube_msg = False, "Skipped"
+    try:
+        youtube_success, youtube_msg = sync_youtube_video()
+    except Exception as e:
+        youtube_msg = str(e)
+
     return jsonify({
         'spotify': {'success': spotify_success, 'message': spotify_msg},
         'youtube': {'success': youtube_success, 'message': youtube_msg}
@@ -448,20 +506,27 @@ def init_db():
     try:
         with app.app_context():
             db.create_all()
-            with db.engine.connect() as conn:
-                try:
-                    result = conn.execute(db.text("PRAGMA table_info(settings)")).fetchall()
-                    columns = [row[1] for row in result]
-                    if columns:
-                        if 'youtube_channel_id' not in columns:
-                            conn.execute(db.text("ALTER TABLE settings ADD COLUMN youtube_channel_id VARCHAR(100)"))
-                        if 'latest_youtube_id' not in columns:
-                            conn.execute(db.text("ALTER TABLE settings ADD COLUMN latest_youtube_id VARCHAR(100)"))
-                        if 'latest_youtube_title' not in columns:
-                            conn.execute(db.text("ALTER TABLE settings ADD COLUMN latest_youtube_title VARCHAR(200)"))
-                        conn.commit()
-                except Exception as ex:
-                    print(f"Schema migration info: {ex}")
+            try:
+                inspector = inspect(db.engine)
+                if 'settings' in inspector.get_table_names():
+                    columns = [c['name'] for c in inspector.get_columns('settings')]
+                    with db.engine.connect() as conn:
+                        trans = conn.begin()
+                        try:
+                            if 'youtube_channel_id' not in columns:
+                                conn.execute(text("ALTER TABLE settings ADD COLUMN youtube_channel_id VARCHAR(100)"))
+                            if 'latest_youtube_id' not in columns:
+                                conn.execute(text("ALTER TABLE settings ADD COLUMN latest_youtube_id VARCHAR(100)"))
+                            if 'latest_youtube_title' not in columns:
+                                conn.execute(text("ALTER TABLE settings ADD COLUMN latest_youtube_title VARCHAR(200)"))
+                            if 'last_youtube_sync' not in columns:
+                                conn.execute(text("ALTER TABLE settings ADD COLUMN last_youtube_sync TIMESTAMP"))
+                            trans.commit()
+                        except Exception as ex:
+                            trans.rollback()
+                            print(f"Schema migration error: {ex}")
+            except Exception as ex:
+                print(f"Schema inspection error: {ex}")
     except Exception as e:
         print(f"Database initialization skipped or failed: {e}")
 
