@@ -157,8 +157,7 @@ def get_gallery_data():
         {'id': 6, 'url': url_for('static', filename='images/gallery/rhyma_gallery_6.jpg'), 'title': 'Afro Noir Shoot'},
         {'id': 8, 'url': url_for('static', filename='images/gallery/rhyma_gallery_8.jpg'), 'title': 'Khaki Vest Pose'},
         {'id': 9, 'url': url_for('static', filename='images/gallery/rhyma_gallery_9.jpg'), 'title': 'Archway Studio Shoot'},
-        {'id': 10, 'url': url_for('static', filename='images/gallery/rhyma_gallery_10.jpg'), 'title': 'Focus Session'},
-        {'id': 12, 'url': url_for('static', filename='images/gallery/rhyma_gallery_12.jpg'), 'title': 'Studio Wheel Pose'}
+        {'id': 10, 'url': url_for('static', filename='images/gallery/rhyma_gallery_10.jpg'), 'title': 'Focus Session'}
     ]
 
 @app.route('/gallery')
