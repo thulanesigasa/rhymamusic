@@ -114,11 +114,9 @@ def get_gallery_data():
         {'id': 4, 'url': url_for('static', filename='images/gallery/rhyma_gallery_4.jpg'), 'title': 'Lounge Session'},
         {'id': 5, 'url': url_for('static', filename='images/gallery/rhyma_gallery_5.jpg'), 'title': 'Luxury Portrait'},
         {'id': 6, 'url': url_for('static', filename='images/gallery/rhyma_gallery_6.jpg'), 'title': 'Afro Noir Shoot'},
-        {'id': 7, 'url': url_for('static', filename='images/gallery/rhyma_gallery_7.jpg'), 'title': 'Cover Shoot'},
         {'id': 8, 'url': url_for('static', filename='images/gallery/rhyma_gallery_8.jpg'), 'title': 'Khaki Vest Pose'},
         {'id': 9, 'url': url_for('static', filename='images/gallery/rhyma_gallery_9.jpg'), 'title': 'Archway Studio Shoot'},
         {'id': 10, 'url': url_for('static', filename='images/gallery/rhyma_gallery_10.jpg'), 'title': 'Focus Session'},
-        {'id': 11, 'url': url_for('static', filename='images/gallery/rhyma_gallery_11.jpg'), 'title': 'Desk Creative Session'},
         {'id': 12, 'url': url_for('static', filename='images/gallery/rhyma_gallery_12.jpg'), 'title': 'Studio Wheel Pose'}
     ]
 
