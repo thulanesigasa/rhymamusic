@@ -75,7 +75,7 @@ const MusicScreen = ({ theme }) => {
 
             {/* Afro Noir EP */}
             <View style={[styles.embedContainer, { height: 'auto' }]}>
-                <TouchableOpacity onPress={() => Linking.openURL('https://music.apple.com/us/album/afro-noir-ep/6784176778')} style={styles.titleContainer}>
+                <TouchableOpacity onPress={() => Linking.openURL('https://open.spotify.com/album/6AvJoL5LSVDf2Jtm7NjgO8')} style={styles.titleContainer}>
                     <Text style={styles.embedTitle}>AFRO NOIR EP</Text>
                     <Ionicons name="open-outline" size={16} color={theme.text} style={{ marginLeft: 5 }} />
                 </TouchableOpacity>
@@ -88,13 +88,13 @@ const MusicScreen = ({ theme }) => {
                         <head>
                         <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
                         <style>
-                            html, body { height: 100%; direction: rtl; margin: 0; padding: 0; }
-                            .content { height: 100%; direction: ltr; }
+                            html, body { height: 100%; margin: 0; padding: 0; }
+                            .content { height: 100%; }
                         </style>
                         </head>
                         <body style="background-color:transparent;">
                         <div class="content">
-                            <iframe style="border-radius:12px" src="https://embed.music.apple.com/us/album/afro-noir-ep/6784176778" width="100%" height="100%" frameBorder="0" allow="autoplay *; encrypted-media *; fullscreen *; clipboard-write" loading="lazy"></iframe>
+                            <iframe style="border-radius:12px" src="https://open.spotify.com/embed/album/6AvJoL5LSVDf2Jtm7NjgO8?utm_source=generator&theme=0" width="100%" height="100%" frameBorder="0" allowfullscreen="" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" loading="lazy"></iframe>
                         </div>
                         </body>
                     </html>
