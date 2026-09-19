@@ -106,18 +106,25 @@ def home():
 def music():
     return render_template('music.html', title="Music")
 
-@app.route('/gallery')
-def gallery():
-    images = [
+def get_gallery_data():
+    return [
         {'id': 1, 'url': url_for('static', filename='images/gallery/rhyma_gallery_1.jpg'), 'title': 'Rhyma Studio Shoot'},
         {'id': 2, 'url': url_for('static', filename='images/gallery/rhyma_gallery_2.jpg'), 'title': 'Writing Session'},
         {'id': 3, 'url': url_for('static', filename='images/gallery/rhyma_gallery_3.jpg'), 'title': 'Creative Process'},
         {'id': 4, 'url': url_for('static', filename='images/gallery/rhyma_gallery_4.jpg'), 'title': 'Lounge Session'},
         {'id': 5, 'url': url_for('static', filename='images/gallery/rhyma_gallery_5.jpg'), 'title': 'Luxury Portrait'},
         {'id': 6, 'url': url_for('static', filename='images/gallery/rhyma_gallery_6.jpg'), 'title': 'Afro Noir Shoot'},
-        {'id': 7, 'url': url_for('static', filename='images/gallery/rhyma_gallery_7.jpg'), 'title': 'Cover Shoot'}
+        {'id': 7, 'url': url_for('static', filename='images/gallery/rhyma_gallery_7.jpg'), 'title': 'Cover Shoot'},
+        {'id': 8, 'url': url_for('static', filename='images/gallery/rhyma_gallery_8.jpg'), 'title': 'Khaki Vest Pose'},
+        {'id': 9, 'url': url_for('static', filename='images/gallery/rhyma_gallery_9.jpg'), 'title': 'Archway Studio Shoot'},
+        {'id': 10, 'url': url_for('static', filename='images/gallery/rhyma_gallery_10.jpg'), 'title': 'Focus Session'},
+        {'id': 11, 'url': url_for('static', filename='images/gallery/rhyma_gallery_11.jpg'), 'title': 'Desk Creative Session'},
+        {'id': 12, 'url': url_for('static', filename='images/gallery/rhyma_gallery_12.jpg'), 'title': 'Studio Wheel Pose'}
     ]
-    return render_template('gallery.html', title="Gallery", images=images)
+
+@app.route('/gallery')
+def gallery():
+    return render_template('gallery.html', title="Gallery", images=get_gallery_data())
 
 @app.route('/merch')
 def merch():
@@ -396,16 +403,7 @@ def get_latest_video():
 
 @app.route('/api/gallery', methods=['GET'])
 def get_gallery():
-    images = [
-        {'id': 1, 'url': url_for('static', filename='images/gallery/rhyma_gallery_1.jpg'), 'title': 'Rhyma Studio Shoot'},
-        {'id': 2, 'url': url_for('static', filename='images/gallery/rhyma_gallery_2.jpg'), 'title': 'Writing Session'},
-        {'id': 3, 'url': url_for('static', filename='images/gallery/rhyma_gallery_3.jpg'), 'title': 'Creative Process'},
-        {'id': 4, 'url': url_for('static', filename='images/gallery/rhyma_gallery_4.jpg'), 'title': 'Lounge Session'},
-        {'id': 5, 'url': url_for('static', filename='images/gallery/rhyma_gallery_5.jpg'), 'title': 'Luxury Portrait'},
-        {'id': 6, 'url': url_for('static', filename='images/gallery/rhyma_gallery_6.jpg'), 'title': 'Afro Noir Shoot'},
-        {'id': 7, 'url': url_for('static', filename='images/gallery/rhyma_gallery_7.jpg'), 'title': 'Cover Shoot'}
-    ]
-    return jsonify(images)
+    return jsonify(get_gallery_data())
 
 @app.route('/api/cron/sync', methods=['GET'])
 def cron_sync():
