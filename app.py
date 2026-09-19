@@ -79,18 +79,27 @@ class Announcement(db.Model):
 # Routes
 @app.route('/')
 def home():
-    latest_single = Track.query.filter_by(is_new_release=True).first()
-    settings = Settings.query.first()
-    if not settings or not settings.latest_youtube_id:
-        sync_youtube_video()
-        settings = Settings.query.first()
+    latest_single = None
+    try:
+        latest_single = Track.query.filter_by(is_new_release=True).first()
+    except Exception as e:
+        print(f"Error querying latest single: {e}")
 
     latest_video = None
-    if settings and settings.latest_youtube_id:
-        latest_video = {
-            'youtube_id': settings.latest_youtube_id,
-            'title': settings.latest_youtube_title or 'New Release Video'
-        }
+    try:
+        settings = Settings.query.first()
+        if not settings or not settings.latest_youtube_id:
+            sync_youtube_video()
+            settings = Settings.query.first()
+
+        if settings and settings.latest_youtube_id:
+            latest_video = {
+                'youtube_id': settings.latest_youtube_id,
+                'title': settings.latest_youtube_title or 'New Release Video'
+            }
+    except Exception as e:
+        print(f"Error fetching YouTube settings: {e}")
+
     return render_template('home.html', title="Home", latest_single=latest_single, latest_video=latest_video)
 
 @app.route('/music')
