@@ -106,6 +106,19 @@ def home():
 def music():
     return render_template('music.html', title="Music")
 
+@app.route('/gallery')
+def gallery():
+    images = [
+        {'id': 1, 'url': url_for('static', filename='images/gallery/rhyma_gallery_1.jpg'), 'title': 'Rhyma Studio Shoot'},
+        {'id': 2, 'url': url_for('static', filename='images/gallery/rhyma_gallery_2.jpg'), 'title': 'Writing Session'},
+        {'id': 3, 'url': url_for('static', filename='images/gallery/rhyma_gallery_3.jpg'), 'title': 'Creative Process'},
+        {'id': 4, 'url': url_for('static', filename='images/gallery/rhyma_gallery_4.jpg'), 'title': 'Lounge Session'},
+        {'id': 5, 'url': url_for('static', filename='images/gallery/rhyma_gallery_5.jpg'), 'title': 'Luxury Portrait'},
+        {'id': 6, 'url': url_for('static', filename='images/gallery/rhyma_gallery_6.jpg'), 'title': 'Afro Noir Shoot'},
+        {'id': 7, 'url': url_for('static', filename='images/gallery/rhyma_gallery_7.jpg'), 'title': 'Cover Shoot'}
+    ]
+    return render_template('gallery.html', title="Gallery", images=images)
+
 @app.route('/merch')
 def merch():
     products = Product.query.all()
@@ -380,6 +393,19 @@ def get_latest_video():
         'title': settings.latest_youtube_title if settings else 'New Release Video',
         'embed_url': f"https://www.youtube.com/embed/{settings.latest_youtube_id if settings and settings.latest_youtube_id else 'prZ-ErkCkNw'}"
     })
+
+@app.route('/api/gallery', methods=['GET'])
+def get_gallery():
+    images = [
+        {'id': 1, 'url': url_for('static', filename='images/gallery/rhyma_gallery_1.jpg'), 'title': 'Rhyma Studio Shoot'},
+        {'id': 2, 'url': url_for('static', filename='images/gallery/rhyma_gallery_2.jpg'), 'title': 'Writing Session'},
+        {'id': 3, 'url': url_for('static', filename='images/gallery/rhyma_gallery_3.jpg'), 'title': 'Creative Process'},
+        {'id': 4, 'url': url_for('static', filename='images/gallery/rhyma_gallery_4.jpg'), 'title': 'Lounge Session'},
+        {'id': 5, 'url': url_for('static', filename='images/gallery/rhyma_gallery_5.jpg'), 'title': 'Luxury Portrait'},
+        {'id': 6, 'url': url_for('static', filename='images/gallery/rhyma_gallery_6.jpg'), 'title': 'Afro Noir Shoot'},
+        {'id': 7, 'url': url_for('static', filename='images/gallery/rhyma_gallery_7.jpg'), 'title': 'Cover Shoot'}
+    ]
+    return jsonify(images)
 
 @app.route('/api/cron/sync', methods=['GET'])
 def cron_sync():

@@ -1,0 +1,82 @@
+{% extends 'base.html' %}
+
+{% block title %}Official Website of Rhyma | Gallery{% endblock %}
+
+{% block content %}
+<div class="container gallery-page" style="padding-top: 2rem; padding-bottom: 4rem;">
+    <div style="text-align: center; margin-bottom: 3rem;">
+        <h1 style="font-family: var(--font-heading); font-size: 2.5rem; letter-spacing: 2px; text-transform: uppercase; margin-bottom: 0.5rem;">Gallery</h1>
+        <p style="color: var(--accent-color); letter-spacing: 3px; font-size: 0.9rem; text-transform: uppercase;">Visual Journey & Studio Archives</p>
+    </div>
+
+    <!-- Gallery Grid -->
+    <div class="gallery-grid" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 1.8rem;">
+        {% for img in images %}
+        <div class="gallery-item" onclick="openLightbox('{{ img.url }}', '{{ img.title }}')"
+             style="position: relative; border-radius: 12px; overflow: hidden; height: 380px; cursor: pointer; box-shadow: 0 4px 15px rgba(0,0,0,0.1); transition: transform 0.3s ease, box-shadow 0.3s ease;">
+            <img src="{{ img.url }}" alt="{{ img.title }}"
+                 style="width: 100%; height: 100%; object-fit: cover; border-radius: 12px; transition: transform 0.4s ease;"
+                 loading="lazy">
+            <div class="gallery-overlay"
+                 style="position: absolute; inset: 0; background: linear-gradient(to top, rgba(0,0,0,0.85) 0%, rgba(0,0,0,0.1) 60%, rgba(0,0,0,0) 100%);
+                        display: flex; flex-direction: column; justify-content: flex-end; padding: 1.2rem; opacity: 0; transition: opacity 0.3s ease; border-radius: 12px;">
+                <span style="color: #fff; font-size: 1.1rem; font-weight: 700; font-family: var(--font-heading);">{{ img.title }}</span>
+                <span style="color: var(--accent-color); font-size: 0.8rem; letter-spacing: 1px; margin-top: 4px;"><i class="fa-solid fa-expand"></i> View Full Screen</span>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+
+<!-- Lightbox Modal -->
+<div id="lightbox-modal" style="display: none; position: fixed; inset: 0; z-index: 9999; background: rgba(0,0,0,0.92); backdrop-filter: blur(8px); justify-content: center; align-items: center; padding: 2rem;">
+    <button onclick="closeLightbox()" style="position: absolute; top: 1.5rem; right: 2rem; background: none; border: none; color: #fff; font-size: 2.5rem; cursor: pointer; z-index: 10000;">&times;</button>
+    <div style="max-width: 90vw; max-height: 90vh; text-align: center; position: relative;">
+        <img id="lightbox-img" src="" alt="Gallery Image" style="max-width: 100%; max-height: 80vh; object-fit: contain; border-radius: 12px; box-shadow: 0 10px 30px rgba(0,0,0,0.5);">
+        <h4 id="lightbox-title" style="color: #fff; font-family: var(--font-heading); margin-top: 1rem; font-size: 1.2rem; letter-spacing: 1px;"></h4>
+    </div>
+</div>
+
+<style>
+.gallery-item:hover {
+    transform: translateY(-6px);
+    box-shadow: 0 12px 25px rgba(197, 160, 89, 0.25) !important;
+}
+.gallery-item:hover img {
+    transform: scale(1.05);
+}
+.gallery-item:hover .gallery-overlay {
+    opacity: 1 !important;
+}
+</style>
+
+<script>
+function openLightbox(url, title) {
+    const modal = document.getElementById('lightbox-modal');
+    const img = document.getElementById('lightbox-img');
+    const titleElem = document.getElementById('lightbox-title');
+    img.src = url;
+    titleElem.innerText = title;
+    modal.style.display = 'flex';
+    document.body.style.overflow = 'hidden';
+}
+
+function closeLightbox() {
+    const modal = document.getElementById('lightbox-modal');
+    modal.style.display = 'none';
+    document.body.style.overflow = 'auto';
+}
+
+document.getElementById('lightbox-modal').addEventListener('click', function(e) {
+    if (e.target === this) {
+        closeLightbox();
+    }
+});
+
+document.addEventListener('keydown', function(e) {
+    if (e.key === 'Escape') {
+        closeLightbox();
+    }
+});
+</script>
+{% endblock %}

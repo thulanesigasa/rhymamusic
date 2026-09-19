@@ -79,6 +79,8 @@
             </li>
             <li><a href="{{ url_for('music') }}" class="{{ 'active' if request.endpoint == 'music' else '' }}">Music</a>
             </li>
+            <li><a href="{{ url_for('gallery') }}" class="{{ 'active' if request.endpoint == 'gallery' else '' }}">Gallery</a>
+            </li>
             <li><a href="{{ url_for('merch') }}" class="{{ 'active' if request.endpoint == 'merch' else '' }}">Merch</a>
             </li>
             <li><a href="{{ url_for('about') }}" class="{{ 'active' if request.endpoint == 'about' else '' }}">About</a>
@@ -139,6 +141,7 @@
             <h4>Quick Links</h4>
             <ul class="footer-links">
                 <li><a href="{{ url_for('music') }}">Music</a></li>
+                <li><a href="{{ url_for('gallery') }}">Gallery</a></li>
                 <li><a href="{{ url_for('bookings') }}">Bookings</a></li>
                 <li><a href="{{ url_for('contact') }}">Contact</a></li>
             </ul>
