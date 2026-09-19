@@ -125,6 +125,44 @@ const HomeScreen = ({ theme, isDarkMode, navigateTo }) => {
                     </TouchableOpacity>
                 </View>
 
+                {/* Afro Noir Album */}
+                <View style={[styles.albumContainer, { marginTop: 40 }]}>
+                    <TouchableOpacity onPress={() => openLink('https://open.spotify.com/album/4zdanK4qRRjCe0N4XXToBt')} style={styles.titleContainer}>
+                        <Text style={[styles.embedTitle, { color: theme.text }]}>AFRO NOIR</Text>
+                        <Ionicons name="open-outline" size={18} color={theme.text} style={{ marginLeft: 5 }} />
+                    </TouchableOpacity>
+
+                    <View style={{ height: 380, borderRadius: 12, overflow: 'hidden', backgroundColor: 'transparent' }}>
+                        <WebView
+                            source={{
+                                html: `
+                      <html>
+                        <head>
+                          <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+                          <style>
+                            html, body { height: 100%; direction: rtl; margin: 0; padding: 0; }
+                            .content { height: 100%; direction: ltr; }
+                          </style>
+                        </head>
+                        <body style="background-color:transparent;">
+                           <div class="content">
+                               <iframe style="border-radius:12px" src="https://open.spotify.com/embed/album/4zdanK4qRRjCe0N4XXToBt?utm_source=generator" width="100%" height="100%" frameBorder="0" allowfullscreen="" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" loading="lazy"></iframe>
+                           </div>
+                        </body>
+                      </html>
+                    ` }}
+                            style={{ flex: 1, backgroundColor: 'transparent' }}
+                            scrollEnabled={true}
+                            nestedScrollEnabled={true}
+                            originWhitelist={['*']}
+                        />
+                    </View>
+                    <TouchableOpacity style={styles.smallCta} onPress={() => openLink('https://music.apple.com/us/artist/rhyma/1232075857')}>
+                        <Ionicons name="logo-apple" size={20} color="#fff" style={{ marginRight: 8 }} />
+                        <Text style={styles.smallCtaText}>Afro Noir on Apple Music</Text>
+                    </TouchableOpacity>
+                </View>
+
                 {/* Stamina Album */}
                 <View style={[styles.albumContainer, { marginTop: 40 }]}>
                     <TouchableOpacity onPress={() => openLink('https://open.spotify.com/album/3YUXPunrRpyRj2zv3ufbEQ')} style={styles.titleContainer}>

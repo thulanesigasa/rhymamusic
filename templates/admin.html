@@ -33,8 +33,25 @@
                 <label for="artist_id" style="display: block; margin-bottom: 0.5rem;">Spotify Artist ID (Optional
                     overrides env):</label>
                 <div class="form-row">
-                    <input type="text" name="artist_id" placeholder="Enter Artist ID" style="flex: 1;">
-                    <button type="submit" class="bronze-btn" style="width: auto;">Save ID</button>
+                    <input type="text" name="artist_id" placeholder="Enter Artist ID" style="flex: 1;" value="{{ settings.artist_id if settings and settings.artist_id else '' }}">
+                    <button type="submit" class="bronze-btn" style="width: auto;">Save Spotify Settings</button>
+                </div>
+            </form>
+
+            <hr style="border-color: rgba(255,255,255,0.1); margin: 2rem 0;">
+
+            <h3>YouTube Integration</h3>
+            <form action="/admin/sync-youtube" method="POST" class="admin-form"
+                style="display: inline-block; margin-right: 1rem;">
+                <button type="submit" class="bronze-btn" style="background: #FF0000; color: white;"><i class="fa-brands fa-youtube"></i> Sync Latest Video from YouTube</button>
+            </form>
+
+            <form action="/admin/youtube-settings" method="POST" class="admin-form" style="margin-top: 1rem;">
+                <label style="display: block; margin-bottom: 0.5rem;">YouTube Channel ID / Video Override:</label>
+                <div class="form-row">
+                    <input type="text" name="youtube_channel_id" placeholder="Channel ID (e.g. UCDew3CMxwN0A7VRLHOwXLBw)" style="flex: 1;" value="{{ settings.youtube_channel_id if settings and settings.youtube_channel_id else '' }}">
+                    <input type="text" name="latest_youtube_id" placeholder="Video ID or URL (Optional override)" style="flex: 1;" value="{{ settings.latest_youtube_id if settings and settings.latest_youtube_id else '' }}">
+                    <button type="submit" class="bronze-btn" style="width: auto;">Save YouTube Settings</button>
                 </div>
             </form>
         </section>

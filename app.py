@@ -80,7 +80,18 @@ class Announcement(db.Model):
 @app.route('/')
 def home():
     latest_single = Track.query.filter_by(is_new_release=True).first()
-    return render_template('home.html', title="Home", latest_single=latest_single)
+    settings = Settings.query.first()
+    if not settings or not settings.latest_youtube_id:
+        sync_youtube_video()
+        settings = Settings.query.first()
+
+    latest_video = None
+    if settings and settings.latest_youtube_id:
+        latest_video = {
+            'youtube_id': settings.latest_youtube_id,
+            'title': settings.latest_youtube_title or 'New Release Video'
+        }
+    return render_template('home.html', title="Home", latest_single=latest_single, latest_video=latest_video)
 
 @app.route('/music')
 def music():
@@ -138,14 +149,9 @@ def logout():
 @app.route('/admin', methods=['GET', 'POST'])
 @login_required # Add login required
 def admin():
-    # Admin dashboard logic (combining both admin logic)
-    if request.method == 'POST':
-        # Default admin post logic - not sure specifically what this form does based on snippet, 
-        # but kept from HEAD lines 48-57 which handled adding products without image?
-        # Leaving as is but maybe redirect to add-merch
-        pass
-        
-    return render_template('admin.html')
+    products = Product.query.all()
+    settings = Settings.query.first()
+    return render_template('admin.html', products=products, settings=settings)
 
 @app.route('/admin/add-merch', methods=['POST'])
 @login_required
@@ -182,7 +188,77 @@ from flask import jsonify
 class Settings(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     artist_id = db.Column(db.String(100), nullable=True)
-    
+    youtube_channel_id = db.Column(db.String(100), nullable=True)
+    latest_youtube_id = db.Column(db.String(100), nullable=True)
+    latest_youtube_title = db.Column(db.String(200), nullable=True)
+
+import urllib.request
+import xml.etree.ElementTree as ET
+import re
+
+def get_channel_id_from_handle(handle="rhymangn"):
+    clean_handle = handle if handle.startswith('@') else '@' + handle
+    url = f"https://www.youtube.com/{clean_handle}"
+    req = urllib.request.Request(url, headers={'User-Agent': 'Mozilla/5.0'})
+    try:
+        with urllib.request.urlopen(req) as response:
+            html = response.read().decode('utf-8')
+            match = re.search(r'youtube\.com/channel/(UC[\w-]+)', html)
+            if match:
+                return match.group(1)
+            match = re.search(r'channel_id=([\w-]+)', html)
+            if match:
+                return match.group(1)
+            match = re.search(r'"channelId":"(UC[\w-]+)"', html)
+            if match:
+                return match.group(1)
+    except Exception as e:
+        print(f"Error fetching channel page: {e}")
+    return None
+
+def sync_youtube_video():
+    try:
+        settings = Settings.query.first()
+        if not settings:
+            settings = Settings()
+            db.session.add(settings)
+            db.session.commit()
+
+        channel_id = settings.youtube_channel_id or os.environ.get('YOUTUBE_CHANNEL_ID')
+        if not channel_id:
+            channel_id = get_channel_id_from_handle("rhymangn")
+            if channel_id:
+                settings.youtube_channel_id = channel_id
+                db.session.commit()
+
+        if not channel_id:
+            return False, "Could not find YouTube Channel ID."
+
+        rss_url = f"https://www.youtube.com/feeds/videos.xml?channel_id={channel_id}"
+        req = urllib.request.Request(rss_url, headers={'User-Agent': 'Mozilla/5.0'})
+        with urllib.request.urlopen(req) as response:
+            xml_data = response.read()
+            root = ET.fromstring(xml_data)
+            ns = {
+                'atom': 'http://www.w3.org/2005/Atom',
+                'yt': 'http://www.youtube.com/xml/schemas/2015'
+            }
+            entry = root.find('atom:entry', ns)
+            if entry is not None:
+                video_id_elem = entry.find('yt:videoId', ns)
+                title_elem = entry.find('atom:title', ns)
+                video_id = video_id_elem.text if video_id_elem is not None else None
+                title = title_elem.text if title_elem is not None else None
+
+                if video_id:
+                    settings.latest_youtube_id = video_id
+                    settings.latest_youtube_title = title
+                    db.session.commit()
+                    return True, f"Synced YouTube Video: '{title}' ({video_id})"
+        return False, "No video entries found in YouTube RSS feed."
+    except Exception as e:
+        return False, str(e)
+
 
 def sync_spotify_music():
     try:
@@ -230,6 +306,13 @@ def sync_spotify_route():
     print(f"Spotify Sync: {success} - {msg}") # Logs to console
     return redirect(url_for('admin'))
 
+@app.route('/admin/sync-youtube', methods=['POST'])
+@login_required
+def sync_youtube_route():
+    success, msg = sync_youtube_video()
+    print(f"YouTube Sync: {success} - {msg}")
+    return redirect(url_for('admin'))
+
 @app.route('/admin/settings', methods=['POST'])
 @login_required
 def update_settings():
@@ -240,6 +323,27 @@ def update_settings():
         db.session.add(settings)
     else:
         settings.artist_id = aid
+    db.session.commit()
+    return redirect(url_for('admin'))
+
+@app.route('/admin/youtube-settings', methods=['POST'])
+@login_required
+def update_youtube_settings():
+    cid = request.form.get('youtube_channel_id')
+    vid = request.form.get('latest_youtube_id')
+    settings = Settings.query.first()
+    if not settings:
+        settings = Settings(youtube_channel_id=cid)
+        db.session.add(settings)
+    else:
+        if cid:
+            settings.youtube_channel_id = cid
+        if vid:
+            if 'v=' in vid:
+                vid = vid.split('v=')[1].split('&')[0]
+            elif 'youtu.be/' in vid:
+                vid = vid.split('youtu.be/')[1].split('?')[0]
+            settings.latest_youtube_id = vid
     db.session.commit()
     return redirect(url_for('admin'))
 
@@ -256,6 +360,18 @@ def get_tracks():
     data = [{'id': t.id, 'title': t.title, 'audio_url': t.audio_url, 'is_new_release': t.is_new_release} for t in tracks]
     return jsonify(data)
 
+@app.route('/api/latest-video', methods=['GET'])
+def get_latest_video():
+    settings = Settings.query.first()
+    if not settings or not settings.latest_youtube_id:
+        sync_youtube_video()
+        settings = Settings.query.first()
+    return jsonify({
+        'youtube_id': settings.latest_youtube_id if settings else 'prZ-ErkCkNw',
+        'title': settings.latest_youtube_title if settings else 'New Release Video',
+        'embed_url': f"https://www.youtube.com/embed/{settings.latest_youtube_id if settings and settings.latest_youtube_id else 'prZ-ErkCkNw'}"
+    })
+
 @app.route('/api/cron/sync', methods=['GET'])
 def cron_sync():
     # Check for authentication (Vercel Cron Secret)
@@ -266,18 +382,39 @@ def cron_sync():
         if not auth_header or auth_header != f"Bearer {cron_secret}":
              return jsonify({'error': 'Unauthorized'}), 401
     
-    success, msg = sync_spotify_music()
-    return jsonify({'success': success, 'message': msg})
+    spotify_success, spotify_msg = sync_spotify_music()
+    youtube_success, youtube_msg = sync_youtube_video()
+    return jsonify({
+        'spotify': {'success': spotify_success, 'message': spotify_msg},
+        'youtube': {'success': youtube_success, 'message': youtube_msg}
+    })
 
 
 # Run this once in python console to create: db.create_all()
 
 # Database initialization for Vercel/Production
-try:
-    with app.app_context():
-        db.create_all()
-except Exception as e:
-    print(f"Database initialization skipped or failed: {e}")
+def init_db():
+    try:
+        with app.app_context():
+            db.create_all()
+            with db.engine.connect() as conn:
+                try:
+                    result = conn.execute(db.text("PRAGMA table_info(settings)")).fetchall()
+                    columns = [row[1] for row in result]
+                    if columns:
+                        if 'youtube_channel_id' not in columns:
+                            conn.execute(db.text("ALTER TABLE settings ADD COLUMN youtube_channel_id VARCHAR(100)"))
+                        if 'latest_youtube_id' not in columns:
+                            conn.execute(db.text("ALTER TABLE settings ADD COLUMN latest_youtube_id VARCHAR(100)"))
+                        if 'latest_youtube_title' not in columns:
+                            conn.execute(db.text("ALTER TABLE settings ADD COLUMN latest_youtube_title VARCHAR(200)"))
+                        conn.commit()
+                except Exception as ex:
+                    print(f"Schema migration info: {ex}")
+    except Exception as e:
+        print(f"Database initialization skipped or failed: {e}")
+
+init_db()
 
 if __name__ == '__main__':
     app.run(debug=True, host='0.0.0.0', port=5000)
