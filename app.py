@@ -104,7 +104,36 @@ def home():
 
 @app.route('/music')
 def music():
-    return render_template('music.html', title="Music")
+    tracks = []
+    try:
+        tracks = Track.query.order_by(Track.id.desc()).all()
+    except Exception as e:
+        print(f"Error fetching music tracks from DB: {e}")
+
+    default_tracks = [
+        {'title': 'AFRO NOIR', 'audio_url': 'https://open.spotify.com/album/6AvJoL5LSVDf2Jtm7NjgO8'},
+        {'title': 'Stand Out', 'audio_url': 'https://open.spotify.com/album/11G7xf6VQHjhSSCtW6FRdt'},
+        {'title': 'Stamina', 'audio_url': 'https://open.spotify.com/track/3b3VmMwvuKGPDNcUdYmLBh'},
+        {'title': 'Medusa', 'audio_url': 'https://open.spotify.com/track/2tYZv2w593ANPrz1HZhp55'},
+        {'title': 'I\'m Callin\'', 'audio_url': 'https://open.spotify.com/album/0u14DjLpxYnzJzHdnV1Ez1'}
+    ]
+
+    latest_tracks = []
+    if tracks:
+        for t in tracks:
+            latest_tracks.append({
+                'title': t.title,
+                'audio_url': t.audio_url
+            })
+
+    if len(latest_tracks) < 5:
+        for dt in default_tracks:
+            if len(latest_tracks) >= 5:
+                break
+            if not any(t['audio_url'] == dt['audio_url'] for t in latest_tracks):
+                latest_tracks.append(dt)
+
+    return render_template('music.html', title="Music", latest_tracks=latest_tracks[:5])
 
 def get_gallery_data():
     return [
@@ -290,38 +319,29 @@ def sync_youtube_video():
 def sync_spotify_music():
     try:
         settings = Settings.query.first()
-        # Use env var as default fallback if DB is empty
         artist_id = settings.artist_id if (settings and settings.artist_id) else os.environ.get('SPOTIFY_ARTIST_ID')
         if not artist_id:
             return False, "Artist ID not configured in Settings or Env (SPOTIFY_ARTIST_ID)."
         auth_manager = SpotifyClientCredentials()
         sp = spotipy.Spotify(auth_manager=auth_manager)
-        # Clear existing new release flags
-        for t in Track.query.filter_by(is_new_release=True).all():
-            t.is_new_release = False
-        db.session.commit()
-        # Fetch latest releases (Singles & Albums/EPs)
-        # We fetch more than 1 to ensure we can sort them by release_date properly
-        results = sp.artist_albums(artist_id, album_type='single,album', limit=5)
+
+        results = sp.artist_albums(artist_id, album_type='single,album', limit=10)
         added_count = 0
-        if results['items']:
-            # Sort by release_date descending (newest first)
-            sorted_albums = sorted(results['items'], key=lambda x: x['release_date'], reverse=True)
-            latest_album = sorted_albums[0]
-            track_title = latest_album['name']
-            audio_url = latest_album['external_urls']['spotify']
-            release_date = latest_album['release_date']
-            # Check if this single is already in our DB
-            existing = Track.query.filter_by(title=track_title).first()
-            if existing:
-                existing.is_new_release = True
-                existing.audio_url = audio_url  # update url just in case
-            else:
-                new_track = Track(title=track_title, audio_url=audio_url, is_new_release=True)
-                db.session.add(new_track)
-                added_count += 1
+        if results and results.get('items'):
+            sorted_albums = sorted(results['items'], key=lambda x: x.get('release_date', ''), reverse=True)[:5]
+            
+            for item in sorted_albums:
+                track_title = item['name']
+                audio_url = item['external_urls']['spotify']
+                existing = Track.query.filter_by(title=track_title).first()
+                if not existing:
+                    new_track = Track(title=track_title, audio_url=audio_url, is_new_release=True)
+                    db.session.add(new_track)
+                    added_count += 1
+                else:
+                    existing.audio_url = audio_url
             db.session.commit()
-            return True, f"Found Latest: '{track_title}' ({release_date}). Synced {added_count} new track(s)."
+            return True, f"Synced top 5 latest releases from Spotify. Added {added_count} new track(s)."
         return False, "No releases found for this Artist ID on Spotify."
     except Exception as e:
         return False, str(e)
