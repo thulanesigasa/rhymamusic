@@ -73,10 +73,10 @@ const MusicScreen = ({ theme }) => {
 
             <Text style={[styles.heading, { color: theme.text, marginTop: 30 }]}>Latest EP</Text>
 
-            {/* Stand Out EP */}
+            {/* Afro Noir EP */}
             <View style={[styles.embedContainer, { height: 'auto' }]}>
-                <TouchableOpacity onPress={() => Linking.openURL('https://open.spotify.com/album/4zdanK4qRRjCe0N4XXToBt')} style={styles.titleContainer}>
-                    <Text style={styles.embedTitle}>STAND OUT</Text>
+                <TouchableOpacity onPress={() => Linking.openURL('https://music.apple.com/us/album/afro-noir-ep/6784176778')} style={styles.titleContainer}>
+                    <Text style={styles.embedTitle}>AFRO NOIR EP</Text>
                     <Ionicons name="open-outline" size={16} color={theme.text} style={{ marginLeft: 5 }} />
                 </TouchableOpacity>
                 <View style={{ height: 380, width: '100%', borderRadius: 12, overflow: 'hidden' }}>
@@ -94,7 +94,7 @@ const MusicScreen = ({ theme }) => {
                         </head>
                         <body style="background-color:transparent;">
                         <div class="content">
-                            <iframe style="border-radius:12px" src="https://open.spotify.com/embed/album/4zdanK4qRRjCe0N4XXToBt?utm_source=generator" width="100%" height="100%" frameBorder="0" allowfullscreen="" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" loading="lazy"></iframe>
+                            <iframe style="border-radius:12px" src="https://embed.music.apple.com/us/album/afro-noir-ep/6784176778" width="100%" height="100%" frameBorder="0" allow="autoplay *; encrypted-media *; fullscreen *; clipboard-write" loading="lazy"></iframe>
                         </div>
                         </body>
                     </html>

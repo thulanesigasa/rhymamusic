@@ -127,7 +127,7 @@ const HomeScreen = ({ theme, isDarkMode, navigateTo }) => {
 
                 {/* Afro Noir Album */}
                 <View style={[styles.albumContainer, { marginTop: 40 }]}>
-                    <TouchableOpacity onPress={() => openLink('https://open.spotify.com/album/4zdanK4qRRjCe0N4XXToBt')} style={styles.titleContainer}>
+                    <TouchableOpacity onPress={() => openLink('https://music.apple.com/us/album/afro-noir-ep/6784176778')} style={styles.titleContainer}>
                         <Text style={[styles.embedTitle, { color: theme.text }]}>AFRO NOIR</Text>
                         <Ionicons name="open-outline" size={18} color={theme.text} style={{ marginLeft: 5 }} />
                     </TouchableOpacity>
@@ -146,7 +146,7 @@ const HomeScreen = ({ theme, isDarkMode, navigateTo }) => {
                         </head>
                         <body style="background-color:transparent;">
                            <div class="content">
-                               <iframe style="border-radius:12px" src="https://open.spotify.com/embed/album/4zdanK4qRRjCe0N4XXToBt?utm_source=generator" width="100%" height="100%" frameBorder="0" allowfullscreen="" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" loading="lazy"></iframe>
+                               <iframe style="border-radius:12px" src="https://embed.music.apple.com/us/album/afro-noir-ep/6784176778" width="100%" height="100%" frameBorder="0" allow="autoplay *; encrypted-media *; fullscreen *; clipboard-write" loading="lazy"></iframe>
                            </div>
                         </body>
                       </html>
@@ -157,7 +157,7 @@ const HomeScreen = ({ theme, isDarkMode, navigateTo }) => {
                             originWhitelist={['*']}
                         />
                     </View>
-                    <TouchableOpacity style={styles.smallCta} onPress={() => openLink('https://music.apple.com/us/artist/rhyma/1232075857')}>
+                    <TouchableOpacity style={styles.smallCta} onPress={() => openLink('https://music.apple.com/us/album/afro-noir-ep/6784176778')}>
                         <Ionicons name="logo-apple" size={20} color="#fff" style={{ marginRight: 8 }} />
                         <Text style={styles.smallCtaText}>Afro Noir on Apple Music</Text>
                     </TouchableOpacity>
