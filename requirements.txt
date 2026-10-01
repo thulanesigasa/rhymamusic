@@ -1,6 +1,6 @@
 flask
 flask-sqlalchemy
 flask-login
+psycopg[binary]
 psycopg2-binary
-spotipy
 spotipy==2.23.0
