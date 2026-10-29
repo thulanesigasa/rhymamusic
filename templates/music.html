@@ -5,24 +5,24 @@
 {% block content %}
 <div class="container music-page">
 
-    <!-- 1. Top Performing -->
+    <!-- 1. Top Tracks -->
     <section class="top-tracks">
         <h2>Top Tracks</h2>
         <div class="spotify-embed-container"
-            style="display: flex; flex-direction: column; gap: 1rem; align-items: center;">
+            style="display: flex; flex-direction: column; gap: 1rem; align-items: center; max-width: 800px; margin: 0 auto;">
             <!-- Medusa -->
             <iframe style="border-radius:12px"
                 src="https://open.spotify.com/embed/track/2tYZv2w593ANPrz1HZhp55?utm_source=generator&theme=0"
                 width="100%" height="152" frameBorder="0" allowfullscreen=""
                 allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture"
                 loading="lazy"></iframe>
-            <!-- I'm Calling (Reverted to Album Embed) -->
+            <!-- I'm Calling -->
             <iframe style="border-radius:12px"
                 src="https://open.spotify.com/embed/album/0u14DjLpxYnzJzHdnV1Ez1?utm_source=generator&theme=0"
                 width="100%" height="152" frameBorder="0" allowfullscreen=""
                 allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture"
                 loading="lazy"></iframe>
-            <!-- Stamina (User Provided Track Link) -->
+            <!-- Stamina -->
             <iframe style="border-radius:12px"
                 src="https://open.spotify.com/embed/track/3b3VmMwvuKGPDNcUdYmLBh?utm_source=generator&theme=0"
                 width="100%" height="152" frameBorder="0" allowfullscreen=""
@@ -31,19 +31,37 @@
         </div>
     </section>
 
-    <!-- 2. Latest Release -->
-    <section class="latest-release-highlight">
-        <h2>Latest EP</h2>
-        <div class="spotify-embed-container" style="display: flex; justify-content: center;">
+    <!-- 2. Latest Singles -->
+    <section class="latest-singles-section">
+        <h2>Latest Singles</h2>
+        <div class="spotify-embed-container"
+            style="display: flex; flex-direction: column; gap: 1rem; align-items: center; max-width: 800px; margin: 0 auto;">
+            {% for single in singles %}
             <iframe style="border-radius:12px"
-                src="https://open.spotify.com/embed/album/4zdanK4qRRjCe0N4XXToBt?utm_source=generator" width="100%"
-                height="352" frameBorder="0" allowfullscreen=""
+                src="{{ single.audio_url | spotify_embed }}"
+                width="100%" height="152" frameBorder="0" allowfullscreen=""
                 allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture"
                 loading="lazy"></iframe>
+            {% endfor %}
         </div>
     </section>
 
-    <!-- 3. Upcoming/Unreleased (Hype) -->
+    <!-- 3. Latest EPs -->
+    <section class="latest-eps-section">
+        <h2>Latest EPs</h2>
+        <div class="spotify-embed-container"
+            style="display: flex; flex-direction: column; gap: 1rem; align-items: center; max-width: 800px; margin: 0 auto;">
+            {% for ep in eps %}
+            <iframe style="border-radius:12px"
+                src="{{ ep.audio_url | spotify_embed }}"
+                width="100%" height="152" frameBorder="0" allowfullscreen=""
+                allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture"
+                loading="lazy"></iframe>
+            {% endfor %}
+        </div>
+    </section>
+
+    <!-- 4. Upcoming Drop -->
     <section class="hype-section">
         <h2>Upcoming Drop</h2>
         <div class="countdown-container" style="text-align: center;">

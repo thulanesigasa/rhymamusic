@@ -5,6 +5,8 @@ from werkzeug.security import generate_password_hash, check_password_hash
 from werkzeug.utils import secure_filename
 from datetime import datetime
 import os
+import re
+import urllib.request
 
 app = Flask(__name__)
 # app.config['SECRET_KEY'] = 'your_secret_key' # Optional if no sessions used
@@ -68,8 +70,10 @@ class Product(db.Model):
 class Track(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     title = db.Column(db.String(100), nullable=False)
-    audio_url = db.Column(db.String(200)) # Link to mp3
+    audio_url = db.Column(db.String(200)) # Link to mp3 or Spotify URL
     is_new_release = db.Column(db.Boolean, default=False)
+    release_type = db.Column(db.String(20), default='single') # 'single' or 'ep'
+    release_date = db.Column(db.String(20), nullable=True)
 
 class Announcement(db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -80,11 +84,49 @@ class Announcement(db.Model):
 @app.route('/')
 def home():
     latest_single = Track.query.filter_by(is_new_release=True).first()
-    return render_template('home.html', title="Home", latest_single=latest_single)
+    settings = Settings.query.first()
+    latest_video_id = settings.latest_video_id if (settings and settings.latest_video_id) else 'puw1cc7-2ZY'
+    return render_template('home.html', title="Home", latest_single=latest_single, latest_video_id=latest_video_id)
+
+@app.template_filter('spotify_embed')
+def spotify_embed_filter(url):
+    if not url:
+        return ""
+    if '/embed/' in url:
+        return url
+    converted = url.replace('https://open.spotify.com/', 'https://open.spotify.com/embed/')
+    if '?' not in converted:
+        converted += '?utm_source=generator'
+    return converted
 
 @app.route('/music')
 def music():
-    return render_template('music.html', title="Music")
+    try:
+        eps = Track.query.filter_by(release_type='ep').order_by(Track.id.desc()).limit(5).all()
+        singles = Track.query.filter_by(release_type='single').order_by(Track.id.desc()).limit(5).all()
+    except Exception:
+        eps, singles = [], []
+
+    default_eps = [
+        {"title": "AFRO NOIR", "audio_url": "https://open.spotify.com/album/6AvJoL5LSVDf2Jtm7NjgO8"},
+        {"title": "VIBES ON VIBES", "audio_url": "https://open.spotify.com/album/4zdanK4qRRjCe0N4XXToBt"},
+        {"title": "STAND OUT", "audio_url": "https://open.spotify.com/album/11G7xf6VQHjhSSCtW6FRdt"},
+        {"title": "STAMINA", "audio_url": "https://open.spotify.com/album/3YUXPunrRpyRj2zv3ufbEQ"},
+        {"title": "I'm Callin'", "audio_url": "https://open.spotify.com/album/0u14DjLpxYnzJzHdnV1Ez1"}
+    ]
+
+    default_singles = [
+        {"title": "Medusa", "audio_url": "https://open.spotify.com/track/2tYZv2w593ANPrz1HZhp55"},
+        {"title": "Stamina", "audio_url": "https://open.spotify.com/track/3b3VmMwvuKGPDNcUdYmLBh"},
+        {"title": "I'm Callin'", "audio_url": "https://open.spotify.com/album/0u14DjLpxYnzJzHdnV1Ez1"},
+        {"title": "Midnight Gold", "audio_url": "https://open.spotify.com/track/0shpPfrxAqZgu2bpeKo86E"},
+        {"title": "Velvet Dreams", "audio_url": "https://open.spotify.com/track/58P64V8UDPqOOmlXJpYLfn"}
+    ]
+
+    display_eps = eps if eps and len(eps) >= 1 else default_eps
+    display_singles = singles if singles and len(singles) >= 1 else default_singles
+
+    return render_template('music.html', title="Music", eps=display_eps, singles=display_singles)
 
 @app.route('/merch')
 def merch():
@@ -182,52 +224,89 @@ from flask import jsonify
 class Settings(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     artist_id = db.Column(db.String(100), nullable=True)
+    latest_video_id = db.Column(db.String(50), nullable=True, default='puw1cc7-2ZY')
     
+
+def sync_latest_youtube_video():
+    try:
+        url = "https://www.youtube.com/playlist?list=UUDew3CMxwN0A7VRLHOwXLBw"
+        req = urllib.request.Request(url, headers={"User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36"})
+        with urllib.request.urlopen(req, timeout=5) as resp:
+            html = resp.read().decode('utf-8')
+        vids = re.findall(r'/watch\?v=([a-zA-Z0-9_-]{11})', html)
+        unique_vids = list(dict.fromkeys(vids))
+        if unique_vids:
+            latest_id = unique_vids[0]
+            settings = Settings.query.first()
+            if not settings:
+                settings = Settings(artist_id='1j1fZpqk1Rov3O8bLIxvGL', latest_video_id=latest_id)
+                db.session.add(settings)
+            else:
+                settings.latest_video_id = latest_id
+            db.session.commit()
+            return True, latest_id
+    except Exception as e:
+        db.session.rollback()
+        return False, str(e)
+    return False, "No videos found"
 
 def sync_spotify_music():
     try:
         settings = Settings.query.first()
-        # Use env var as default fallback if DB is empty
-        artist_id = settings.artist_id if (settings and settings.artist_id) else os.environ.get('SPOTIFY_ARTIST_ID')
-        if not artist_id:
-            return False, "Artist ID not configured in Settings or Env (SPOTIFY_ARTIST_ID)."
+        artist_id = (settings.artist_id if settings and settings.artist_id else None) or os.environ.get('SPOTIFY_ARTIST_ID') or '1j1fZpqk1Rov3O8bLIxvGL'
         auth_manager = SpotifyClientCredentials()
         sp = spotipy.Spotify(auth_manager=auth_manager)
-        # Clear existing new release flags
-        for t in Track.query.filter_by(is_new_release=True).all():
-            t.is_new_release = False
+        
+        # 1. Fetch EPs / Albums (keep latest 5, rolling off older ones)
+        album_results = sp.artist_albums(artist_id, album_type='album', limit=10)
+        ep_items = sorted(album_results.get('items', []), key=lambda x: x.get('release_date', ''), reverse=True)[:5]
+        
+        # 2. Fetch Singles (keep latest 5, rolling off older ones)
+        single_results = sp.artist_albums(artist_id, album_type='single', limit=10)
+        single_items = sorted(single_results.get('items', []), key=lambda x: x.get('release_date', ''), reverse=True)[:5]
+        
+        if not ep_items and not single_items:
+            return False, "No releases found for this Artist ID on Spotify."
+            
+        # Update EPs: maintain strictly 5
+        if ep_items:
+            Track.query.filter_by(release_type='ep').delete()
+            for ep in ep_items:
+                t = Track(
+                    title=ep['name'],
+                    audio_url=ep['external_urls']['spotify'],
+                    release_type='ep',
+                    release_date=ep.get('release_date', ''),
+                    is_new_release=False
+                )
+                db.session.add(t)
+
+        # Update Singles: maintain strictly 5
+        if single_items:
+            Track.query.filter_by(release_type='single').delete()
+            for idx, s in enumerate(single_items):
+                t = Track(
+                    title=s['name'],
+                    audio_url=s['external_urls']['spotify'],
+                    release_type='single',
+                    release_date=s.get('release_date', ''),
+                    is_new_release=(idx == 0) # Flag latest single for homepage
+                )
+                db.session.add(t)
+                
         db.session.commit()
-        # Fetch latest releases (Singles & Albums/EPs)
-        # We fetch more than 1 to ensure we can sort them by release_date properly
-        results = sp.artist_albums(artist_id, album_type='single,album', limit=5)
-        added_count = 0
-        if results['items']:
-            # Sort by release_date descending (newest first)
-            sorted_albums = sorted(results['items'], key=lambda x: x['release_date'], reverse=True)
-            latest_album = sorted_albums[0]
-            track_title = latest_album['name']
-            audio_url = latest_album['external_urls']['spotify']
-            release_date = latest_album['release_date']
-            # Check if this single is already in our DB
-            existing = Track.query.filter_by(title=track_title).first()
-            if existing:
-                existing.is_new_release = True
-                existing.audio_url = audio_url  # update url just in case
-            else:
-                new_track = Track(title=track_title, audio_url=audio_url, is_new_release=True)
-                db.session.add(new_track)
-                added_count += 1
-            db.session.commit()
-            return True, f"Found Latest: '{track_title}' ({release_date}). Synced {added_count} new track(s)."
-        return False, "No releases found for this Artist ID on Spotify."
+        return True, f"Successfully synced {len(ep_items)} EPs and {len(single_items)} Singles from Spotify."
     except Exception as e:
+        db.session.rollback()
         return False, str(e)
 
 @app.route('/admin/sync-spotify', methods=['POST'])
 @login_required
 def sync_spotify_route():
     success, msg = sync_spotify_music()
-    print(f"Spotify Sync: {success} - {msg}") # Logs to console
+    yt_success, yt_msg = sync_latest_youtube_video()
+    print(f"Spotify Sync: {success} - {msg}")
+    print(f"YouTube Sync: {yt_success} - {yt_msg}")
     return redirect(url_for('admin'))
 
 @app.route('/admin/settings', methods=['POST'])
@@ -267,7 +346,11 @@ def cron_sync():
              return jsonify({'error': 'Unauthorized'}), 401
     
     success, msg = sync_spotify_music()
-    return jsonify({'success': success, 'message': msg})
+    yt_success, yt_msg = sync_latest_youtube_video()
+    return jsonify({
+        'spotify': {'success': success, 'message': msg},
+        'youtube': {'success': yt_success, 'message': yt_msg}
+    })
 
 
 # Run this once in python console to create: db.create_all()
@@ -276,6 +359,22 @@ def cron_sync():
 try:
     with app.app_context():
         db.create_all()
+        with db.engine.connect() as conn:
+            try:
+                conn.execute(db.text("ALTER TABLE track ADD COLUMN release_type VARCHAR(20) DEFAULT 'single'"))
+                conn.commit()
+            except Exception:
+                pass
+            try:
+                conn.execute(db.text("ALTER TABLE track ADD COLUMN release_date VARCHAR(20)"))
+                conn.commit()
+            except Exception:
+                pass
+            try:
+                conn.execute(db.text("ALTER TABLE settings ADD COLUMN latest_video_id VARCHAR(50) DEFAULT 'puw1cc7-2ZY'"))
+                conn.commit()
+            except Exception:
+                pass
 except Exception as e:
     print(f"Database initialization skipped or failed: {e}")
 

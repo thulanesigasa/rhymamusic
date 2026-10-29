@@ -992,8 +992,8 @@ button[type="submit"] {
 
 /* Page Transitions */
 body {
-    opacity: 0;
-    transition: opacity 0.5s ease-in-out;
+    opacity: 1;
+    transition: opacity 0.3s ease-in-out;
 }
 
 body.loaded {
@@ -1051,6 +1051,19 @@ footer .container {
     margin-bottom: 1rem;
     color: var(--accent-color);
     font-size: 0.9rem;
+}
+
+.footer-social-icons a {
+    color: var(--text-color);
+    transition: color 0.3s ease, transform 0.2s ease;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.footer-social-icons a:hover {
+    color: var(--accent-color);
+    transform: translateY(-2px);
 }
 
 .footer-links li {

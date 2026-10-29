@@ -119,19 +119,15 @@
 
             <div class="footer-section">
                 <h4>Rhyma</h4>
-                <p style="font-size: 0.9rem; color: #666;">Defining the New Sound of Luxury.</p>
-                <a href="https://x.com/rhymangn" target="_blank" title="X (Twitter)"><i
-                        class="fa-brands fa-x-twitter"></i></a>
-                <a href="https://music.apple.com/us/artist/rhyma/1232075857" target="_blank" title="Apple Music"><i
-                        class="fa-brands fa-apple"></i></a>
-                <a href="https://www.tiktok.com/@rhymangn" target="_blank" title="TikTok"><i
-                        class="fa-brands fa-tiktok"></i></a>
-                <a href="https://www.instagram.com/rhymangn" target="_blank" title="Instagram"><i
-                        class="fa-brands fa-instagram"></i></a>
-                <a href="https://youtube.com/rhymangn" target="_blank" title="YouTube"><i
-                        class="fa-brands fa-youtube"></i></a>
-                <a href="https://open.spotify.com/search/RHYMA" target="_blank" title="Spotify"><i
-                        class="fa-brands fa-spotify"></i></a>
+                <p style="font-size: 0.9rem; color: #666; margin-bottom: 1rem;">Defining the New Sound of Luxury.</p>
+                <div class="footer-social-icons" style="display: flex; gap: 1.25rem; font-size: 1.25rem; align-items: center;">
+                    <a href="https://x.com/rhymangn" target="_blank" title="X (Twitter)"><i class="fa-brands fa-x-twitter"></i></a>
+                    <a href="https://music.apple.com/us/artist/rhyma/1232075857" target="_blank" title="Apple Music"><i class="fa-brands fa-apple"></i></a>
+                    <a href="https://www.tiktok.com/@rhymangn" target="_blank" title="TikTok"><i class="fa-brands fa-tiktok"></i></a>
+                    <a href="https://www.instagram.com/rhymangn" target="_blank" title="Instagram"><i class="fa-brands fa-instagram"></i></a>
+                    <a href="https://youtube.com/rhymangn" target="_blank" title="YouTube"><i class="fa-brands fa-youtube"></i></a>
+                    <a href="https://open.spotify.com/search/RHYMA" target="_blank" title="Spotify"><i class="fa-brands fa-spotify"></i></a>
+                </div>
             </div>
         </div>
 
@@ -181,23 +177,12 @@
             });
         });
 
-        // Page Transition
-        window.addEventListener('load', () => {
+        // Page Ready & Visibility
+        document.addEventListener('DOMContentLoaded', () => {
             document.body.classList.add('loaded');
         });
-
-        document.querySelectorAll('a').forEach(anchor => {
-            anchor.addEventListener('click', function (e) {
-                // Check if it's an internal link and not a hash link
-                if (this.hostname === window.location.hostname && this.getAttribute('href').indexOf('#') !== 0 && this.getAttribute('target') !== '_blank') {
-                    e.preventDefault();
-                    document.body.classList.remove('loaded');
-                    const href = this.getAttribute('href');
-                    setTimeout(() => {
-                        window.location.href = href;
-                    }, 500); // Matches CSS transition time
-                }
-            });
+        window.addEventListener('pageshow', () => {
+            document.body.classList.add('loaded');
         });
 
         // Back to Top Button
