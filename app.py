@@ -128,6 +128,25 @@ def music():
 
     return render_template('music.html', title="Music", eps=display_eps, singles=display_singles)
 
+@app.route('/gallery')
+def gallery():
+    gallery_dir = os.path.join(app.root_path, 'static', 'images', 'gallery')
+    images = []
+    if os.path.exists(gallery_dir):
+        images = [f for f in sorted(os.listdir(gallery_dir)) if f.lower().endswith(('.jpeg', '.jpg', '.png', '.webp'))]
+    if not images:
+        images = [
+            'WhatsApp_Image_2026-10-30_at_07_48_37.jpeg',
+            'WhatsApp_Image_2026-10-30_at_07_48_38.jpeg',
+            'WhatsApp_Image_2026-10-30_at_07_48_38__1_.jpeg',
+            'WhatsApp_Image_2026-10-30_at_07_48_39.jpeg',
+            'WhatsApp_Image_2026-10-30_at_07_48_39__1_.jpeg',
+            'WhatsApp_Image_2026-10-30_at_07_48_39__2_.jpeg',
+            'WhatsApp_Image_2026-10-30_at_07_48_39__3_.jpeg',
+            'WhatsApp_Image_2026-10-30_at_07_48_39__4_.jpeg'
+        ]
+    return render_template('gallery.html', title="Gallery", images=images)
+
 @app.route('/merch')
 def merch():
     products = Product.query.all()

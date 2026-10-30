@@ -1,0 +1,126 @@
+{% extends 'base.html' %}
+
+{% block title %}Official Website of Rhyma | Gallery{% endblock %}
+
+{% block content %}
+<div class="container gallery-page">
+
+    <div class="gallery-header">
+        <h1>Gallery</h1>
+        <p>The Visual Aesthetic of Luxury</p>
+    </div>
+
+    <div class="gallery-grid" id="gallery-grid">
+        {% for img in images %}
+        <div class="gallery-item" onclick="openLightbox({{ loop.index0 }})" tabindex="0" role="button" aria-label="View photo {{ loop.index }}">
+            <img src="{{ url_for('static', filename='images/gallery/' ~ img) }}" alt="Rhyma Gallery Photo {{ loop.index }}" loading="lazy">
+            <div class="gallery-overlay">
+                <i class="fa-solid fa-expand"></i>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+
+    <!-- Lightbox Modal -->
+    <div id="lightbox-modal" class="lightbox-modal" onclick="onLightboxBackdropClick(event)">
+        <button class="lightbox-close" onclick="closeLightbox()" aria-label="Close photo viewer">&times;</button>
+        <button class="lightbox-nav lightbox-prev" onclick="prevLightbox(event)" aria-label="Previous photo">&#10094;</button>
+        
+        <div class="lightbox-content-wrapper">
+            <img id="lightbox-image" class="lightbox-image" src="" alt="Enlarged gallery photo">
+        </div>
+
+        <button class="lightbox-nav lightbox-next" onclick="nextLightbox(event)" aria-label="Next photo">&#10095;</button>
+        <div id="lightbox-counter" class="lightbox-counter">1 / {{ images|length }}</div>
+    </div>
+
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+    const galleryImages = [
+        {% for img in images %}
+        "{{ url_for('static', filename='images/gallery/' ~ img) }}"{% if not loop.last %},{% endif %}
+        {% endfor %}
+    ];
+
+    let currentLightboxIndex = 0;
+    const lightboxModal = document.getElementById('lightbox-modal');
+    const lightboxImage = document.getElementById('lightbox-image');
+    const lightboxCounter = document.getElementById('lightbox-counter');
+
+    function openLightbox(index) {
+        if (index < 0 || index >= galleryImages.length) return;
+        currentLightboxIndex = index;
+        updateLightboxDisplay();
+        lightboxModal.classList.add('active');
+        document.body.style.overflow = 'hidden'; // Prevent background scrolling
+    }
+
+    function closeLightbox() {
+        lightboxModal.classList.remove('active');
+        document.body.style.overflow = '';
+    }
+
+    function updateLightboxDisplay() {
+        lightboxImage.src = galleryImages[currentLightboxIndex];
+        if (lightboxCounter) {
+            lightboxCounter.textContent = `${currentLightboxIndex + 1} / ${galleryImages.length}`;
+        }
+    }
+
+    function nextLightbox(e) {
+        if (e) e.stopPropagation();
+        currentLightboxIndex = (currentLightboxIndex + 1) % galleryImages.length;
+        updateLightboxDisplay();
+    }
+
+    function prevLightbox(e) {
+        if (e) e.stopPropagation();
+        currentLightboxIndex = (currentLightboxIndex - 1 + galleryImages.length) % galleryImages.length;
+        updateLightboxDisplay();
+    }
+
+    function onLightboxBackdropClick(e) {
+        if (e.target === lightboxModal || e.target.classList.contains('lightbox-content-wrapper')) {
+            closeLightbox();
+        }
+    }
+
+    // Keyboard navigation
+    document.addEventListener('keydown', function(e) {
+        if (!lightboxModal.classList.contains('active')) return;
+        if (e.key === 'Escape') {
+            closeLightbox();
+        } else if (e.key === 'ArrowRight') {
+            nextLightbox();
+        } else if (e.key === 'ArrowLeft') {
+            prevLightbox();
+        }
+    });
+
+    // Mobile swipe gestures
+    let touchStartX = 0;
+    let touchEndX = 0;
+
+    lightboxModal.addEventListener('touchstart', function(e) {
+        touchStartX = e.changedTouches[0].screenX;
+    }, { passive: true });
+
+    lightboxModal.addEventListener('touchend', function(e) {
+        touchEndX = e.changedTouches[0].screenX;
+        handleSwipe();
+    }, { passive: true });
+
+    function handleSwipe() {
+        const threshold = 50;
+        if (touchEndX < touchStartX - threshold) {
+            nextLightbox();
+        } else if (touchEndX > touchStartX + threshold) {
+            prevLightbox();
+        }
+    }
+</script>
+{% endblock %}
+
